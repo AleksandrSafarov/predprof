@@ -1,4 +1,3 @@
 # Предпрофессиональная олимпиада
-html файлы в templates/maps
-#
-css/js/images в соответсвующих папках в static/maps
+<p>html файлы в templates/maps</p>
+<p>css/js/images в соответсвующих папках в static/maps</p>
