@@ -1,0 +1,21 @@
+{% extends 'maps/base.html' %}
+{% load static %}
+
+{% block title %}SusaninMaps{% endblock %}
+
+{% block content %}
+<div class="navigator-ui">
+    <div id="map" class="map"></div>
+
+    <div class="navigator-menu">
+        <div class="menu-inp">
+            <a>
+                <img src="{% static 'maps/images/Settings.png' %}" alt=""> Настройки:
+            </a>
+            <a>
+                <img src="{% static 'maps/images/ClockIcon.png' %}" alt=""> Временной лимит
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
