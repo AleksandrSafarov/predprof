@@ -8,5 +8,12 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-def index(request):
-    return render(request, 'maps/index.html')
+def login(request):
+    return render(request, 'user/login.html')
+
+def register(request):
+    return render(request, 'user/register.html')
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
