@@ -2,11 +2,15 @@ from django import forms
 from django.contrib.auth.forms import *
 from django.contrib.auth.models import User
 
-class RegisterUserForm(UserCreationForm):
+class SignUpForm(UserCreationForm):
     username = forms.CharField(
         label="Логин", 
         widget=forms.TextInput(attrs={'placeholder': "Логин"})
         )
+    mail=forms.CharField(
+        label='E-mail',
+        widget=forms.TextInput(attrs={'placeholder': "E-mail"})
+    )
     password1 = forms.CharField(
         label="Пароль", 
         widget=forms.PasswordInput(attrs={'placeholder': "Пароль"})
@@ -20,7 +24,7 @@ class RegisterUserForm(UserCreationForm):
         model = User
         fields = ('username', 'password1', 'password2')
 
-class LoginUserForm(AuthenticationForm):
+class LoginForm(AuthenticationForm):
     username = forms.CharField(
         label="Логин", 
         widget=forms.TextInput(attrs={'placeholder': "Логин"})
@@ -73,3 +77,4 @@ class ChangeUserDataForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email')
+
