@@ -16,24 +16,23 @@ function init() {
         });
 
     var myMap = new ymaps.Map('map', {
-            center: [55.831, 37.629],
-            zoom: 15,
-            controls: ['smallMapDefaultSet']
-        }, {
-            searchControlProvider: 'yandex#search',
-            restrictMapArea: [
-                [55.842, 37.604],
-                [55.821, 37.651]
-            ]
-            
-        }),
-        menu = $('<ul class="menu"/>');
+        center: [55.831, 37.629],
+        zoom: 15,
+        controls: ['smallMapDefaultSet']
+    }, {
+        searchControlProvider: 'yandex#search',
+        restrictMapArea: [
+            [55.842, 37.604],
+            [55.821, 37.651]
+        ]
+    }),
+    menu = $('<ul class="menu"/>');
 
     for (var i = 0, l = groups.length; i < l; i++) {
         createMenuGroup(groups[i]);
     }
 
-    function createMenuGroup(group) {
+    function createMenuGroup (group) {
         var menuItem = $('<li><a href="#">' + group.name + '</a></li>'),
             collection = new ymaps.GeoObjectCollection(null, { preset: group.style }),
             submenu = $('<ul class="submenu"/>');
@@ -43,7 +42,7 @@ function init() {
             .append(submenu)
             .appendTo(menu)
             .find('a')
-            .bind('click', function() {
+            .bind('click', function () {
                 if (collection.getParent()) {
                     myMap.geoObjects.remove(collection);
                     submenu.hide();
@@ -56,8 +55,7 @@ function init() {
             createSubMenu(group.items[j], collection, submenu);
         }
     }
-
-    function createSubMenu(item, collection, submenu) {
+        function createSubMenu (item, collection, submenu) {
         var submenuItem = $('<li><a href="#">' + item.name + '</a></li>'),
             placemark = new ymaps.Placemark(item.center, { balloonContent: item.name });
 
@@ -65,7 +63,7 @@ function init() {
         submenuItem
             .appendTo(submenu)
             .find('a')
-            .bind('click', function() {
+            .bind('click', function () {
                 if (!placemark.balloon.isOpen()) {
                     placemark.balloon.open();
                 } else {
@@ -77,6 +75,6 @@ function init() {
 
     menu.appendTo($('body'));
     myMap.geoObjects.add(multiRoute);
-}
+    }; 
 
 ymaps.ready(init);

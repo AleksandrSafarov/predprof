@@ -9,7 +9,7 @@ class SignUpForm(UserCreationForm):
         )
     mail=forms.CharField(
         label='E-mail',
-        widget=forms.TextInput(attrs={'placeholder': "E-mail"})
+        widget=forms.EmailInput(attrs={'placeholder': "E-mail"})
     )
     password1 = forms.CharField(
         label="Пароль", 
