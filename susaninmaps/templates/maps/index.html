@@ -5,17 +5,68 @@
 
 {% block content %}
 <div class="navigator-ui">
+
     <div id="map" class="map"></div>
 
     <div class="navigator-menu">
+
         <div class="menu-inp">
-            <a>
-                <img src="{% static 'maps/images/Settings.png' %}" alt=""> Настройки:
-            </a>
-            <a>
-                <img src="{% static 'maps/images/ClockIcon.png' %}" alt=""> Временной лимит
-            </a>
+            <span></span>
+
+            <span>
+                <img src="{% static 'maps/images/SettingsIcon.svg' %}" alt="">
+                <a>Настройки:</a>
+            </span>
+
+            <span class="time-limit">
+                
+                <select name="time-limit" id="time-limit">
+                    <option selected disabled value="0">Ограничеение по времени</option>
+                    <option value="0">Отсутствует</option>
+                    <option value="15">15m</option>
+                    <option value="30">30m</option>
+                    <option value="45">45m</option>
+                    <option value="60">1h</option>
+                    <option value="75">1h 15m</option>
+                    <option value="90">1h 30m</option>
+                    <option value="105">1h 45m</option>
+                    <option value="120">2h</option>
+                    <option value="135">2h 15m</option>
+                    <option value="150">2h 30m</option>
+                    <option value="165">2h 45m</option>
+                    <option value="180">3h</option>
+                </select>
+            </span>
+            
+            <span>
+                <input type="checkbox" id="addRecomendation" class="add-rec">
+                <a>Добавить рекомендации</a>
+            </span>
+
+            <hr>
+
+            <span>
+                <select name="points" id="points"></select>
+            </span>
+
+            <hr>
+
+            <span>
+                <img src="{% static 'maps/images/InfoIcon.svg' %}" alt="">
+                <a>Информация:</a>
+            </span>
+            <span>
+                <img src="{% static 'maps/images/Clock.svg' %}" alt="">
+                <a>Время: {{time}}m</a>
+            </span>
+            <span>
+                <img src="{% static 'maps/images/Navigator.png' %}" class="locator-img" alt="">
+                <a>Длина: {{lenght}}км</a>
+            </span>
+
+            <span></span>
         </div>
+
     </div>
 </div>
 {% endblock %}

@@ -31,10 +31,10 @@
         <nav>
             <div class="nav-menu" id="navMenu">
                 <a href="/">
-                    <img src="{% static 'maps/images/Home.png' %}" alt=""> Главная
+                    <img src="{% static 'maps/images/HomeIcon.svg' %}" alt=""> Главная
                 </a>
                 <a href="/">
-                    <img src="{% static 'maps/images/Navigator.png' %}" alt=""> Навигатор
+                    <img src="{% static 'maps/images/Navigator.png' %}" class="locator-img" alt=""> Навигатор
                 </a>
                 
                 {% if request.user.is_authenticated %}
@@ -54,8 +54,9 @@
     </header>
 
     <hr>
-    <div id="content">
+    <div class="content" id="content">
         {% block content %}{% endblock %}
+    </div>
 </body>
 
 </html>
