@@ -33,9 +33,11 @@
                 <a href="/">
                     <img src="{% static 'maps/images/HomeIcon.svg' %}" alt=""> Главная
                 </a>
+                {% if request.resolver_match.view_name != 'index' %}
                 <a href="/">
                     <img src="{% static 'maps/images/Navigator.png' %}" class="locator-img" alt=""> Навигатор
                 </a>
+                {% endif %}
                 
                 {% if request.user.is_authenticated %}
 				<a href="{% url 'login' %}"><img src="{% static 'maps/images/AccountIcon.png' %}" alt="">

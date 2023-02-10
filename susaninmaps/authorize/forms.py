@@ -4,20 +4,20 @@ from django.contrib.auth.models import User
 
 class SignUpForm(UserCreationForm):
     username = forms.CharField(
-        label="Логин", 
+        label="", 
         widget=forms.TextInput(attrs={'placeholder': "Логин"})
         )
     mail=forms.CharField(
-        label='E-mail',
+        label="",
         widget=forms.EmailInput(attrs={'placeholder': "E-mail"})
     )
     password1 = forms.CharField(
-        label="Пароль", 
+        label="", 
         widget=forms.PasswordInput(attrs={'placeholder': "Пароль"})
         )
     password2 = forms.CharField(
-        label="Повторите пароль", 
-        widget=forms.PasswordInput(attrs={'placeholder': "Повтор пароля"})
+        label="", 
+        widget=forms.PasswordInput(attrs={'placeholder': "Повторите пароль"})
         )
     
     class Meta:
@@ -26,26 +26,26 @@ class SignUpForm(UserCreationForm):
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
-        label="Логин", 
-        widget=forms.TextInput(attrs={'placeholder': "Логин"})
+        label="", 
+        widget=forms.TextInput(attrs={'placeholder': "Введите логин"})
         )
     password = forms.CharField(
-        label="Пароль", 
-        widget=forms.PasswordInput(attrs={'placeholder': "Пароль", "class": "form-control"})
+        label="", 
+        widget=forms.PasswordInput(attrs={'placeholder': "Введите пароль", "class": "form-control"})
         )
 
-class ChangePasswordForm(PasswordChangeForm):
+class ChangePassForm(PasswordChangeForm):
     old_password = forms.CharField(
-        label="Старый пароль", 
+        label="", 
         widget=forms.PasswordInput(attrs={'placeholder': "Старый пароль"})
         )
     new_password1 = forms.CharField(
-        label="Новый пароль", 
+        label="", 
         widget=forms.PasswordInput(attrs={'placeholder': "Новый пароль"})
         )
     new_password2 = forms.CharField(
-        label="Подтверждение нового пароля", 
-        widget=forms.PasswordInput(attrs={'placeholder': "Повтор нового пароля"})
+        label="", 
+        widget=forms.PasswordInput(attrs={'placeholder': "Повторите новый пароль"})
         )
     
     class Meta:
@@ -54,27 +54,17 @@ class ChangePasswordForm(PasswordChangeForm):
 
 class ChangeUserDataForm(UserChangeForm):
     username = forms.CharField(
-        label="Логин", 
+        label="", 
         widget=forms.TextInput(attrs={'placeholder': "Введите логин"})
         )
-    first_name = forms.CharField(
-        label="Имя", 
-        required=False, 
-        widget=forms.TextInput(attrs={'placeholder': "Введите имя"})
-        )
-    last_name = forms.CharField(
-        label="Фамилия", 
-        required=False, 
-        widget=forms.TextInput(attrs={'placeholder': "Введите фамилию"})
-        )
     email = forms.EmailField(
-        label="Электронная почта", 
+        label="", 
         required=False, 
-        widget=forms.EmailInput(attrs={'placeholder': "Введите электронную почту"})
+        widget=forms.EmailInput(attrs={'placeholder': "Введите E-mail"})
         )
     password = None
     
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email')
+        fields = ('username', 'email')
 

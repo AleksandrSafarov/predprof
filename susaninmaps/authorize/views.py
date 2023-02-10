@@ -1,7 +1,6 @@
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import *
-from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth import logout, login
 from django.urls.base import reverse_lazy
@@ -13,7 +12,7 @@ def logout_user(request):
 
 class SignUp(CreateView):
     form_class = SignUpForm
-    template_name = 'registration/form.html'
+    template_name = 'user/form.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -22,14 +21,13 @@ class SignUp(CreateView):
         return context
 
     def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, 'Вы успешно создали аккаунт')
         user = form.save()
         login(self.request, user)
         return redirect('index')
 
 class Login(LoginView):
     form_class = LoginForm
-    template_name = 'registration/form.html'
+    template_name = 'user/form.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -39,9 +37,36 @@ class Login(LoginView):
         context['signupurl'] = 'Создайте!'
         return context
 
-    def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, f'С возвращением {form.cleaned_data["username"]}!')
-        return super().form_valid(form)
-
     def get_success_url(self):
         return reverse_lazy('index')
+
+class ChangeUserData(LoginRequiredMixin, UpdateView):
+    form_class = ChangeUserDataForm
+    template_name = 'user/form.html'
+
+    success_url = reverse_lazy('index')
+    login_url = reverse_lazy('login')
+
+    def get_object(self):
+        return self.request.user
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Редактировать данные"
+        context["button_text"] = "Сохранить"
+        return context
+
+class ChangePass(LoginRequiredMixin, PasswordChangeView):
+    form_class = ChangePassForm
+    template_name = 'user/form.html'
+    login_url = reverse_lazy('login')
+    success_url = reverse_lazy('index')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Изменить пароль"
+        context["button_text"] = "Изменить"
+        return context
+
+    def form_valid(self, form):
+        return super().form_valid(form)
