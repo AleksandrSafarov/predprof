@@ -4,69 +4,66 @@
 {% block title %}SusaninMaps{% endblock %}
 
 {% block content %}
-<div class="navigator-ui">
+<div id="map" class="map"></div>
 
-    <div id="map" class="map"></div>
+<div class="navigator-menu">
 
-    <div class="navigator-menu">
+    <div class="menu-inp">
+        <span></span>
 
-        <div class="menu-inp">
-            <span></span>
+        <span>
+            <img src="{% static 'maps/images/SettingsIcon.svg' %}" alt="">
+            <a>Настройки:</a>
+        </span>
 
-            <span>
-                <img src="{% static 'maps/images/SettingsIcon.svg' %}" alt="">
-                <a>Настройки:</a>
-            </span>
-
-            <span class="time-limit">
-                
-                <select name="time-limit" id="time-limit">
-                    <option selected disabled value="0">Ограничеение по времени</option>
-                    <option value="0">Отсутствует</option>
-                    <option value="15">15m</option>
-                    <option value="30">30m</option>
-                    <option value="45">45m</option>
-                    <option value="60">1h</option>
-                    <option value="75">1h 15m</option>
-                    <option value="90">1h 30m</option>
-                    <option value="105">1h 45m</option>
-                    <option value="120">2h</option>
-                    <option value="135">2h 15m</option>
-                    <option value="150">2h 30m</option>
-                    <option value="165">2h 45m</option>
-                    <option value="180">3h</option>
-                </select>
-            </span>
+        <span class="time-limit">
             
-            <span>
-                <input type="checkbox" id="addRecomendation" class="add-rec">
-                <a>Добавить рекомендации</a>
-            </span>
+            <select name="time-limit" id="time-limit">
+                <option selected disabled value="0">Ограничение по времени</option>
+                <option value="0">Отсутствует</option>
+                <option value="15">15мин</option>
+                <option value="30">30мин</option>
+                <option value="45">45мин</option>
+                <option value="60">1ч</option>
+                <option value="75">1ч 15мин</option>
+                <option value="90">1ч 30мин</option>
+                <option value="105">1ч 45мин</option>
+                <option value="120">2ч</option>
+                <option value="135">2ч 15мин</option>
+                <option value="150">2ч 30мин</option>
+                <option value="165">2ч 45мин</option>
+                <option value="180">3ч</option>
+            </select>
+        </span>
+        
+        <span>
+            <input type="checkbox" id="addRecomendation" class="add-rec">
+            <a>Добавить рекомендации</a>
+        </span>
 
-            <hr>
+        <hr>
 
-            <span>
-                <select name="points" id="points"></select>
-            </span>
+        <span>
+            <select name="points" id="points"></select>
+        </span>
 
-            <hr>
+        <hr>
 
-            <span>
-                <img src="{% static 'maps/images/InfoIcon.svg' %}" alt="">
-                <a>Информация:</a>
-            </span>
-            <span>
-                <img src="{% static 'maps/images/Clock.svg' %}" alt="">
-                <a>Время: {{time}}m</a>
-            </span>
-            <span>
-                <img src="{% static 'maps/images/Navigator.png' %}" class="locator-img" alt="">
-                <a>Длина: {{lenght}}км</a>
-            </span>
+        <span>
+            <img src="{% static 'maps/images/InfoIcon.svg' %}" alt="">
+            <a>Информация:</a>
+        </span>
+        <span>
+            <img src="{% static 'maps/images/Clock.svg' %}" alt="">
+            <a>Время: {{time}}m</a>
+        </span>
+        <span>
+            <img src="{% static 'maps/images/Navigator.png' %}" class="locator-img" alt="">
+            <a>Длина: {{lenght}}км</a>
+        </span>
 
-            <span></span>
-        </div>
-
+        <span></span>
     </div>
+
 </div>
 {% endblock %}

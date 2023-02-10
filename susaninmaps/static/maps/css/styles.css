@@ -20,6 +20,15 @@ a{
     color: var(--text-color);
 }
 
+p{
+    padding-left: 5px;
+    padding-right: 5px;
+
+    font-size: 18px;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
 li {
     list-style: none;
 }
@@ -52,8 +61,8 @@ select{
 header{
     display: flex;
     
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 
     width: 100vw;
 
@@ -63,7 +72,7 @@ header{
 .header-logo{
     text-align: center;
 
-    margin-left: 10%;
+    margin-left: 10px;
 }
 
 .header-logo a{
@@ -76,27 +85,28 @@ header{
     width: 50px;
     height: 50px;
 
-    margin-right: 10px;
+    margin-right: 5px;
+    margin-left: 3vw;
 }
 
 nav{
     position: relative;
 
-    width: 66.7vw;
+    width: 66vw;
 }
 
 .nav-menu{
     position: absolute;
 
     transform: translate(0, -50%);
-    right: 23.4%;
+    right: 0vw;
     top: 50%;
 }
 
 .nav-menu a{    
     font-size: 23px;
-    padding-left: calc(45px / 2);
-    padding-right: calc(45px / 2);
+    padding-left: calc(25px / 2);
+    padding-right: calc(25px / 2);
     padding-bottom: 11px;
 }
 
@@ -119,30 +129,30 @@ nav{
 }
 
 hr{
-    margin-left: 7%;
-    margin-right: 7%;
+    margin-left: 3%;
+    margin-right: 3%;
 
     border-color: var(--hr-color);
 }
 
 /*------------------------body------------------------*/
 
-.navigator-ui{
+.content{
     display: flex;
 
     margin-top: 50px;
     margin-bottom: 50px;
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 .map{
-    width: 75vw;
-    height: 30vw;
+    width: 75%;
+    height: 80vh;
 }
 
 .map > ymaps{
-    border-radius: 50px;
+    border-radius: 15px;
     overflow: hidden;
 }
 
@@ -160,7 +170,7 @@ hr{
     width: 20vw;
     height: fit-content;
 
-    border-radius: 20px;
+    border-radius: 10px;
     background-color: var(--box-shadow);
 }
 
@@ -186,40 +196,52 @@ hr{
 
 /*------------------------adaptive------------------------*/
 
-@media screen and (max-width: 1150px) {
-    .nav-menu a{
-        display: none;
+/* Minimum aspect ratio */
+@media screen and (max-width: 900px) {
+    .content{
+        flex-direction: column;
+
+        margin-top: 15px;
+        margin-left: 5vw;
+        margin-right: 5vw;
     }
-    .nav-menu a.icon{
-        float: right;
-        margin-top: -17px;
-        display: block;
-        color: #EDF5E1;
-        font-size: 26px;
-    }
-    nav{
+
+    .map{
+        display: flex;
         width: 100%;
+        height: 60vh;
     }
-    .nav-menu.responsive{
-        position: relative;
-        top: 75px;
-        left: -230px;
+
+    .map > ymaps{
+        border-radius: 15px;
+        overflow: hidden;
     }
-    header .nav-menu.responsive{
-        height: 160px;
-        margin-bottom: 50px;
+
+    .navigator-menu{
+        width: 100%;
+        margin-left: 0px;
     }
-    .nav-menu.responsive a.icon{
-        position: absolute;
-        top: -50px;
-        right: -210px;
+
+    .menu-inp{
+        margin-top: 20px;
+    
+        width: 100%;
+        height: fit-content;
+    
+        border-radius: 10px;
+        background-color: var(--box-shadow);
     }
-    .nav-menu.responsive a{
-        float: none;
-        display: block;
-        text-align: left;
+    .nav-menu a{    
+        font-size: 18px;
+        padding-left: calc(10px / 2);
+        padding-right: calc(10px / 2);
+        padding-bottom: 11px;
     }
-    .nav-menu a:hover{
-        border-bottom: none;
+
+    .nav-menu img{
+        vertical-align: middle;
+        margin-bottom: 5px;
+        height: 25px;
+        width: 25px;
     }
-} 
+}

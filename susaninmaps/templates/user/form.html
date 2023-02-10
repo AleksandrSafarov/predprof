@@ -5,26 +5,29 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<h1>{{ title }}</h1>
-<form method="POST" action="" enctype="multipart/form-data">
-    {% csrf_token %}
+<div class="reg-login">
+	<h1>{{ title }}</h1>
+	<form method="POST" action="" enctype="multipart/form-data">
+		{% csrf_token %}
+		<div>{{ form.non_field_errors }}</div>
 
-    <div>{{ form.non_field_errors }}</div>
+		{% for field in form %}
+		<div class="form-group">
+			<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+			{% render_field field class='form-control' %}
+			<div>{{ field.help_text }}</div>
+			<div>{{ field.errors }}</div>
+		</div>
 
-    {% for field in form %}
-    <div class="form-group">
-      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-      {% render_field field class='form-control' %}
-      <div>{{ field.help_text }}</div>
-      <div>{{ field.errors }}</div>
-    </div>
-    {% endfor %}
-    <br>
-    <button type="submit" class="btn btn-primary">{{ button_text }}</button>
-  </form>
-  <p>{{noaccount_text}}
-  <a href="{% url 'signup' %}">{{signupurl}}</a>
-  </p>
-  </div>
+		{% endfor %}
+
+		<br>
+		<button type="submit" class="btn btn-primary">{{ button_text }}</button>
+		</form>
+		<p>{{noaccount_text}}
+		<a href="{% url 'signup' %}">{{signupurl}}</a>
+		</p>
+		</div>
+	</div>
 </div>
 {% endblock %}

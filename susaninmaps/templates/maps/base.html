@@ -18,24 +18,24 @@
     <script src="{% static 'maps/js/groups.js' %}"></script>
     <script src="{% static 'maps/js/route_panel_control.js' %}"></script>
     <script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 </head>
 
 <body>
     <header>
         <div class="header-logo">
             <a>
-                <img src="{% static 'maps/images/logo.png' %}" alt="" class="logo"> SusaninMaps
+                <img src="{% static 'maps/images/Compass.png' %}" alt="" class="logo">
+                SusaninMaps
             </a>
         </div>
 
         <nav>
             <div class="nav-menu" id="navMenu">
+                {% if request.resolver_match.view_name != 'index'%}
                 <a href="/">
                     <img src="{% static 'maps/images/HomeIcon.svg' %}" alt=""> Главная
-                </a>
-                {% if request.resolver_match.view_name != 'index' %}
-                <a href="/">
-                    <img src="{% static 'maps/images/Navigator.png' %}" class="locator-img" alt=""> Навигатор
                 </a>
                 {% endif %}
                 
@@ -46,9 +46,11 @@
                         Выйти
                     </a>
 				{% else %}
+                {% if request.resolver_match.view_name != 'login' %}
 				<a href="{% url 'login' %}">
                     <img src="{% static 'maps/images/AccountIcon.png' %}" alt=""> Личный кабинет
                 </a>
+                {% endif %}
 				{% endif %}
                 <a href="#" id="menu" class="icon">&#9776;</a>
             </div>
