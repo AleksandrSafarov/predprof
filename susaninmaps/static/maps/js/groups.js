@@ -1,8 +1,10 @@
 // Группы объектов
-var groups = [{
+var groups = [
+    {
         name: "Музеи",
         style: "islands#redIcon",
-        items: [{
+        items: [
+            {
                 center: [55.826591, 37.638033],
                 name: "Музей ВДНХ"
             },
@@ -146,20 +148,21 @@ var groups = [{
                 center: [55.832879, 37.631125],
                 name: "Музей Магии и Фокусов"
             }
-        ]
-    },
+        ]},
     {
         name: "Достопримечательности",
         style: "islands#greenIcon",
-        items: [{
-            center: [55.826249, 37.637578],
-            name: "ВДНХ"
-        }]
-    },
+        items: [
+            {
+                center: [55.826249, 37.637578],
+                name: "ВДНХ"
+            }
+        ]},
     {
         name: "другое",
         style: "islands#blueIcon",
-        items: [{
+        items: [
+            {
                 center: [55.833797, 37.623099],
                 name: "Самолëт Як-42"
             },
@@ -167,6 +170,5 @@ var groups = [{
                 center: [55.834308, 37.623085],
                 name: "Макет ракеты-носителя Восток"
             }
-        ]
-    }
+        ]}
 ];

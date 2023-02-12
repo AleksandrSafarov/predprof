@@ -4,66 +4,94 @@
 {% block title %}SusaninMaps{% endblock %}
 
 {% block content %}
-<div id="map" class="map"></div>
+<div class="navigator-ui">
+    <div id="map" class="map"></div>
 
-<div class="navigator-menu">
+    <div class="navigator-menu">
 
-    <div class="menu-inp">
-        <span></span>
+        <div class="menu-inp">
+            <div class="menu-block">
+                <p>
+                    <img src="{% static 'maps/images/SettingsIcon.svg' %}" class="setings-img" alt="">
+                    Настройки:
+                </p>
+            </div>
 
-        <span>
-            <img src="{% static 'maps/images/SettingsIcon.svg' %}" alt="">
-            <a>Настройки:</a>
-        </span>
-
-        <span class="time-limit">
-            
-            <select name="time-limit" id="time-limit">
-                <option selected disabled value="0">Ограничение по времени</option>
-                <option value="0">Отсутствует</option>
-                <option value="15">15мин</option>
-                <option value="30">30мин</option>
-                <option value="45">45мин</option>
-                <option value="60">1ч</option>
-                <option value="75">1ч 15мин</option>
-                <option value="90">1ч 30мин</option>
-                <option value="105">1ч 45мин</option>
-                <option value="120">2ч</option>
-                <option value="135">2ч 15мин</option>
-                <option value="150">2ч 30мин</option>
-                <option value="165">2ч 45мин</option>
-                <option value="180">3ч</option>
-            </select>
-        </span>
+            <div class="menu-block">
+                
+                <select class="time-limit" name="time-limit" id="timeLimit">
+                    <option selected disabled value="0">Ограничение по времени</option>
+                    <option value="0">Отсутствует</option>
+                    <option value="15">15мин</option>
+                    <option value="30">30мин</option>
+                    <option value="45">45мин</option>
+                    <option value="60">1ч</option>
+                    <option value="75">1ч 15мин</option>
+                    <option value="90">1ч 30мин</option>
+                    <option value="105">1ч 45мин</option>
+                    <option value="120">2ч</option>
+                    <option value="135">2ч 15мин</option>
+                    <option value="150">2ч 30мин</option>
+                    <option value="165">2ч 45мин</option>
+                    <option value="180">3ч</option>
+                </select>
+            </div>
         
-        <span>
-            <input type="checkbox" id="addRecomendation" class="add-rec">
-            <a>Добавить рекомендации</a>
-        </span>
+            <div class="menu-block">
+                <p>
+                    <input type="checkbox" id="addRecomendation" class="add-rec">
+                    Добавить рекомендации
+                </p>
+            </div>
 
-        <hr>
+            <hr>
 
-        <span>
-            <select name="points" id="points"></select>
-        </span>
+            <div class="menu-block">
+                <p>
+                    Места посещения
+                </p>
+                <div class="select-isolation">
+                    <select class="points-select" id="points" multiple data-multi-select-plugin>
+                    </select>
+                </div>
+                <a class="build-route" id="buildRoute">Построить маршрут</a>
+            </div class="menu-block">
 
-        <hr>
+            <hr>
 
-        <span>
-            <img src="{% static 'maps/images/InfoIcon.svg' %}" alt="">
-            <a>Информация:</a>
-        </span>
-        <span>
-            <img src="{% static 'maps/images/Clock.svg' %}" alt="">
-            <a>Время: {{time}}m</a>
-        </span>
-        <span>
-            <img src="{% static 'maps/images/Navigator.png' %}" class="locator-img" alt="">
-            <a>Длина: {{lenght}}км</a>
-        </span>
+            <div class="menu-block">
+                <p>
+                    <img src="{% static 'maps/images/InfoIcon.svg' %}" alt="">
+                    Информация:
+                </p>
+            </div>
 
-        <span></span>
+            <div class="menu-block">
+                <p id="time">
+                    <img src="{% static 'maps/images/Clock.svg' %}" alt="">
+                    Время: {{time}}мин
+                </p>
+            </div>
+
+            <div class="menu-block">
+                <p id="lenght">
+                    <img src="{% static 'maps/images/Navigator.png' %}" class="locator-img" alt="">
+                    Длина: {{lenght}}км
+                </p>
+            </div>
+        </div>
+
     </div>
-
+</div>
+<div style="width: 500px; height: 300px; background: white; overflow: auto" id = "conteyner"></div>
+<input type="button" id="gobtn" value="go"/> <input type="button" id="desel" value="del"/> <input type="button" id="next" value="next"/>
+<div class="slidecontainer">
+  <input type="range" min="5" max="100" value="30" class="slider" id="myRange">
+</div> <span id = "time" >30</span>
+<div id="popup">
+  <div class="content">
+    <a>Маршруты не найдены!</a>
+      <a>Увеличьте время</a>
+  </div>
 </div>
 {% endblock %}
