@@ -4,6 +4,8 @@ from django.http import HttpResponse, JsonResponse
 import json
 import sqlite3 as sql
 
+from .models import *
+
 def index(request):
     return render(request, 'maps/index.html')
 
@@ -133,10 +135,7 @@ def route(request):
                 return pu  # вывод
 
     s = {}
-    con = sql.connect("C:/Users/Aleksey/django/predprof/susaninmaps/db.sqlite3")  # подключаюсь к базе данных
-    cur = con.cursor()  # ну это наверное нужно
-    cur.execute(
-        'SELECT point1, point2 FROM route')  # таблица routeолучаю из нее значения точки(point1) и куда можно пойти(point2)
+    cur = Place.objects.values_list('point1', 'point2')
     for i in cur:  # проход по данным
         po = i[0]  # точка
         zn = i[1].split(";")  # пути хранятся как строка 1 значение - точка 2- время ;- разделитель
@@ -145,8 +144,6 @@ def route(request):
             if ',' in zn[i]:
                 mas.append([zn[i], int(zn[i + 1])])  # добавляю точку и время
         s[po] = mas  # сохраняю куда можно пойти из точки
-    cur.close()
-    con.close()  # отключаю подключение
     ti = json.loads(request.body.decode('utf-8'))
     poi = list(map(lambda x: x.split(",")[0] +", "+ x.split(",")[1],ti['point']))
     points = [
