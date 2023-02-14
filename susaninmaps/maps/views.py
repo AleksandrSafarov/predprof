@@ -2,7 +2,6 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 import json
-import sqlite3 as sql
 
 from .models import *
 
@@ -35,18 +34,26 @@ def route(request):
                     -1]:  # этот цикл для коректировки времени маршрута. последняя точка не должна учитоваться
                     return [[past[:-1], t_n - b[i][1]]]
         if past == [] and ob_p == []:  # нет обязательных точек и начала маршрута
-            roud = []
+            pu = []
             v = graf[x]  # точки куда могу пойти
             past.append(x)  # начальная точка
             for i in range(len(v)):
                 if t_n + v[i][1] <= max_t:  # перебираю точки в которые могу пойти
                     a = o_gr(graf, max_t, x, t_n + v[i][1], past + [v[i][0]], ob_p)  # поучаю маршрут
-                    roud += [*a]
-            ma_l = max(list(map(lambda x: len(x[0]), roud)))
+                    pu += [*a]
+            for i in range(len(pu)):  # убираю повторы
+                for y in range(i + 1, len(pu)):  # и если у 2х маршрутов одинаковые точки
+                    if pu[i] != [] and pu[y] != []:  # то оставляю тот, который меньше по времени
+                        if len(pu[i][0]) == len(pu[y][0]):
+                            c = op_m(pu[i], pu[y])
+                            pu[i] = c[0]
+                            pu[y] = c[1]
+            pu = list(filter(lambda x: x != [], pu))  # удаляю пустые списки
+            ma_l = max(list(map(lambda x: len(x[0]), pu)))
             rez = {}
             k = 1
             while ma_l > 0:
-                a = list(filter(lambda x: len(x[0]) == ma_l, roud))
+                a = list(filter(lambda x: len(x[0]) == ma_l, pu))
                 ma_l -= 1
                 for i in range(len(a)):
                     rez[str(k)] = a[i][0]
@@ -135,7 +142,7 @@ def route(request):
                 return pu  # вывод
 
     s = {}
-    cur = Place.objects.values_list('point1', 'point2')
+    cur = Place.objects.values_list('point1', 'point2') # таблица routeолучаю из нее значения точки(point1) и куда можно пойти(point2)
     for i in cur:  # проход по данным
         po = i[0]  # точка
         zn = i[1].split(";")  # пути хранятся как строка 1 значение - точка 2- время ;- разделитель
