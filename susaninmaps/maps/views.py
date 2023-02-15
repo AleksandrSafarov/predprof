@@ -1,12 +1,36 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
 import json
+
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import *
+
+from maps.models import Route
 
 from .models import *
 
-def index(request):
-    return render(request, 'maps/index.html')
+from .forms import *
+
+
+class Index(TemplateView):
+    form_class = IndexForm
+    template_name = 'maps/index.html'
+    success_url = reverse_lazy('index')
+
+    def get_queryset(self):
+        return Route.objects.all()
+
+    def get_context_data(self, **kwargs):
+        self.extra_context = {
+            'static_routes': Route.objects.filter(isStatic=True),
+            'user_routes': Route.objects.filter(isStatic=False),
+            'button_text': "Сохранить"
+        }
+        return super().get_context_data(**kwargs)
+        
+    def get_success_url(self):
+        return reverse_lazy('index')
 
 def save(request):
     routes = json.loads(request.body.decode('utf-8'))["rez"]
@@ -15,6 +39,7 @@ def save(request):
     #номер маршрута от 1 до 5 строкой и далее сам маршрут - список поинтов
     return HttpResponse(request)
 
+@csrf_exempt
 def route(request):
     def op_m(a, b):
         if sorted(a[0]) == sorted(b[0]):
@@ -58,7 +83,7 @@ def route(request):
                 for i in range(len(a)):
                     rez[str(k)] = a[i][0]
                     k += 1
-                    if k == 6: return rez
+                    if k == 11: return rez
             return rez
 
         elif past == [] and ob_p != []:  # есть обязательные точки, но нет начала
@@ -90,13 +115,13 @@ def route(request):
             rez = {}
             ma_l = max(list(map(lambda x: len(x[0]), pu)))  # максимальная длина
             k = 1
-            while ma_l > 0 and len(rez) < 5: # ищу маршруты
+            while ma_l > 0 and len(rez) < 10: # ищу маршруты
                 a = sorted(filter(lambda x: len(x[0]) == ma_l, pu), key=lambda x: x[1])  # самые длинные
                 ma_l -= 1
                 for i in range(len(a)):
                     rez[str(k)] = a[i][0]
                     k += 1
-                    if k == 6: return rez
+                    if k == 11: return rez
             return rez
 
         else:

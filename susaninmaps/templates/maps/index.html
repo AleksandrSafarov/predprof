@@ -1,5 +1,6 @@
 {% extends 'maps/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %}SusaninMaps{% endblock %}
 
@@ -94,4 +95,20 @@
       <a>Увеличьте время</a>
   </div>
 </div>
+<div class="static-routes">
+    {% for route in static_routes %}
+    <p>{{route.name}}. Дистанция: {{route.distance}}, время: {{route.time}}</p>
+    {% endfor %}
+</div>
+{% if request.user.is_authenticated %}
+    <div class="user-routes">
+        {% for route in user_routes %}predprof
+        
+            {% if user.id == route.userId.id %}
+                <p>{{route.name}}. Дистанция: {{route.distance}}, время: {{route.time}}</p>
+	        {% endif %}
+    
+        {% endfor %}
+    </div>
+{% endif %}
 {% endblock %}

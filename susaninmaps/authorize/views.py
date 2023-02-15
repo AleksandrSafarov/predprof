@@ -1,10 +1,12 @@
-from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import *
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.shortcuts import redirect
-from django.contrib.auth import logout, login
 from django.urls.base import reverse_lazy
+from django.views.generic import *
+
 from .forms import *
+
 
 def logout_user(request):
     logout(request)

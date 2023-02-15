@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import *
 from django.contrib.auth.models import User
 
+
 class SignUpForm(UserCreationForm):
     username = forms.CharField(
         label="", 
