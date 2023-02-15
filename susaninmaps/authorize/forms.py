@@ -23,16 +23,16 @@ class SignUpForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ('username', 'password1', 'password2')
+        fields = ('username', 'mail', 'password1', 'password2')
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
         label="", 
-        widget=forms.TextInput(attrs={'placeholder': "Введите логин"})
+        widget=forms.TextInput(attrs={'placeholder': "Логин"})
         )
     password = forms.CharField(
         label="", 
-        widget=forms.PasswordInput(attrs={'placeholder': "Введите пароль", "class": "form-control"})
+        widget=forms.PasswordInput(attrs={'placeholder': "Пароль", "class": "form-control"})
         )
 
 class ChangePassForm(PasswordChangeForm):
@@ -56,12 +56,12 @@ class ChangePassForm(PasswordChangeForm):
 class ChangeUserDataForm(UserChangeForm):
     username = forms.CharField(
         label="", 
-        widget=forms.TextInput(attrs={'placeholder': "Введите логин"})
+        widget=forms.TextInput(attrs={'placeholder': "Логин"})
         )
     email = forms.EmailField(
         label="", 
         required=False, 
-        widget=forms.EmailInput(attrs={'placeholder': "Введите E-mail"})
+        widget=forms.EmailInput(attrs={'placeholder': "E-mail"})
         )
     password = None
     

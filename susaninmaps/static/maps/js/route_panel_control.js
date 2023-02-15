@@ -1,180 +1,174 @@
-var myMap;
-var routes;
-const postData = async (url = '', data = {}) => {
-
-        const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrftoken,
-        },
-        body: JSON.stringify(data)
-      });
-      return response.json();
-    }
-function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 const csrftoken = getCookie('csrftoken');
+var imap;
+ymaps.ready(init);
 
 let new_routes = []
-let last_route = []
-let fillroute = [["#000088", "#E63E92"], ["#ff9baa", "#E63E92"],["#6a38ff", "#E63E92"],["#0f93ff", "#E63E92"],["#00856f", "#E63E92"]]//цвета маршрутов
+let fillroute = [['#000088', '#E63E92'], ['#ff9baa', '#E63E92'], ['#6a38ff', '#E63E92'], ['#0f93ff', '#E63E92'], ['#00856f', '#E63E92']]//цвета маршрутов
 let k = 0
 
-function init(route) {
-  myMap = new ymaps.Map('map', {
-        center: [55.831, 37.629],
-        zoom: 15,
-        controls: ['smallMapDefaultSet']
-    }, {
-        searchControlProvider: 'yandex#search',
-        restrictMapArea: [
-            [55.842, 37.604],
-            [55.821, 37.651]
-        ]
-    }),
-    menu = $('<ul class="menu"/>');
+function init() {
+    var map = new ymaps.Map('map',
+        {
+            center: [55.831, 37.629],
+            zoom: 15,
+            controls: ['smallMapDefaultSet']
+        },
+        {
+            searchControlProvider: 'yandex#search',
+            restrictMapArea: [
+                [55.842, 37.604],
+                [55.821, 37.651]
+            ]
+        });
 
-    for (var i = 0, l = groups.length; i < l; i++) {//формирую меню
-        createMenuGroup(groups[i]);
+    imap = new IMap(map);
+}
+
+async function generateRoute(time, points) {
+    // TODO: исправить асинхронку и переместить alert в sript.js.
+    var rez = {}
+    rez = await postData('def/', { 'point': points, 'time': time, state: 'inactive' });
+
+    var canBuild = (Object.keys(rez).length != 0);
+
+    if (canBuild === false) {
+        alert('Не удалось построить маршрут.');
+    }
+    new_routes = []
+    for (let i in rez) {
+        new_routes.push(rez[i])
+    }
+    k = 0;
+    imap.displayRoute();
+
+    return true;
+}
+
+// Вывод информации на html страницу.
+function displayInformation(pointsCount, timeroute, lenroute) {
+    document.querySelector('#pointsCount').textContent = `Кол-во точек: ${pointsCount} шт`;
+    document.querySelector('#time').textContent = `Время: ${timeroute}`;
+    document.querySelector('#lenght').innerText = `Длина: ${lenroute}`;
+}
+
+
+// Работа с сервером.
+const postData = async (url = '', data = {}) => {
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify(data)
+    });
+    return response.json();
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+class IMap {
+    #multiRoute;
+
+    constructor(map) {
+        this.map = map;
+
+        this.#syncLiksWithPoints();
     }
 
-    function createMenuGroup (group) {
-        var menuItem = $('<li><a href="#">' + group.name + '</a></li>'),
-            collection = new ymaps.GeoObjectCollection(null, { preset: group.style }),
-            submenu = $('<ul class="submenu"/>');
+    /* Отрисовка маршрута на карте. */
+    displayRoute() {
+        this.#clearLastRoute();
 
-        myMap.geoObjects.add(collection);
-        menuItem
-            .append(submenu)
-            .appendTo(menu)
-            .find('a')
-            .bind('click', function () {
-                if (collection.getParent()) {
-                    myMap.geoObjects.remove(collection);
-                    submenu.hide();
-                } else {
-                    myMap.geoObjects.add(collection);
-                    submenu.show();
+        this.#multiRoute = new ymaps.multiRouter.MultiRoute(
+            {
+                referencePoints: new_routes[k],
+                params: {
+                    routingMode: 'pedestrian'
                 }
-            });
-        for (var j = 0, m = group.items.length; j < m; j++) {
-            createSubMenu(group.items[j], collection, submenu);
-        }
-    }
-    function createSubMenu (item, collection, submenu) {
-        if (item.center == '55.826591,37.638033'){
-        var submenuItem = $('<li><a href="#">' + item.name +'</a>' + "</li>")
-        }
-        if (item.center != '55.826591,37.638033'){
-        var submenuItem = $('<li><a href="#">' + item.name +'</a>' + '<input class="messageCheckbox" type="checkbox" name=' + item.center+'><span class="checkmark" ></span>' + "</li>")
-        }
-        var placemark = new ymaps.Placemark(item.center, { balloonContent: item.name });
+            },
+            {
+                wayPointStartIconColor: '#333',
+                wayPointStartIconFillColor: '#B3B3B3',
 
-        collection.add(placemark);
-        submenuItem
-            .appendTo(submenu)
-            .find('a')
-            .bind('click', function () {
-                if (!placemark.balloon.isOpen()) {
-                    placemark.balloon.open();
-                } else {
+                routeStrokeWidth: 2,
+                routeStrokeColor: fillroute[k],
+                routeActiveStrokeWidth: 6,
+                routeActiveStrokeColor: fillroute[k],
+
+                routeActivePedestrianSegmentStrokeStyle: fillroute[k],
+                routeActivePedestrianSegmentStrokeColor: fillroute[k],
+                boundsAutoApply: true
+            });
+
+        this.map.geoObjects.add(this.#multiRoute);
+
+        this.#multiRoute.model.events.add(
+            'requestsuccess',
+            function (event) {
+                const routeProperties = event.get('target').getRoutes()[0].properties;
+                displayInformation(
+                    new_routes[k].length,
+                    routeProperties.get('duration').text.slice(0, -1),
+                    routeProperties.get('distance').text
+                );
+            }
+        ).add('requestfail', function (event) {
+            console.log('Error: ' + event.get('error').message);
+        });
+    }
+
+    /* Синхронизация ссылок меню с точками на карте. */
+    #syncLiksWithPoints() {
+        const pointTextLinks = document.querySelector('#points').querySelectorAll('a');
+        const collection = new ymaps.GeoObjectCollection(null, { preset: ' ' });
+        this.map.geoObjects.add(collection);
+
+        pointTextLinks.forEach(function callback(pointTextLink, index, array) {
+            const location = pointTextLink.parentElement.dataset.location.split(',');
+            const name = pointTextLink.textContent;
+
+            const placemark = new ymaps.Placemark(location, { balloonContent: name });
+
+            placemark.options.set('visible', false);
+            collection.add(placemark);
+
+            pointTextLink.onclick = function () {
+                if (placemark.balloon.isOpen()) {
                     placemark.balloon.close();
+                } else {
+                    placemark.balloon.open();
                 }
-                return false;
-            });
+            };
+        });
     }
 
-    menu.appendTo($(document.getElementById("conteyner")));
-}
-ymaps.ready(init)
-
-function show_popup(){
-    var popup = document.getElementById('popup')
-             popup.classList.toggle('active')
-             window.onclick = function(event) {
-                popup.className = ""
-             }
-}
-function createinf(sumpoints ,timeroute, lenroute){
-    if (document.getElementById("info") == null){
-    var razn = $("<li id = inforoute><a id = info>количество точек : "+sumpoints+" время : "+timeroute+" длина : "+lenroute+"</a>"+ "<input type='button' id=inforoutebtn value='save'/></li>")
-    razn.appendTo($("body"))
-    var kn1 = document.getElementById("inforoutebtn")
-    kn1.onclick = function () {
-          postData("save/", {"rez":new_routes[k],state:"inactive" })
-    }
-    }
-    if (document.getElementById("info") != null){
-        document.getElementById("info").innerHTML = "количество точек : "+sumpoints+" время : "+timeroute+" длина : "+lenroute
-    }
+    #clearLastRoute() { this.map.geoObjects.remove(this.#multiRoute); }
 }
 
-function addroute(){
-    multiRoute = new ymaps.multiRouter.MultiRoute({
-                            referencePoints: new_routes[k],
-                            params: {
-                                routingMode: 'pedestrian'
-                            }
-                        }, {
-                            wayPointStartIconColor: "#333",
-                            wayPointStartIconFillColor: "#B3B3B3",
-
-                            routeStrokeWidth: 2,
-                            routeStrokeColor: fillroute[k],
-                            routeActiveStrokeWidth: 6,
-                            routeActiveStrokeColor: fillroute[k],
-
-                            routeActivePedestrianSegmentStrokeStyle: fillroute[k],
-                            routeActivePedestrianSegmentStrokeColor: fillroute[k],
-                            boundsAutoApply: true
-                        })
-    myMap.geoObjects.add(multiRoute)
-    last_route = multiRoute
-    multiRoute.model.events.add("requestsuccess", function (event) {
-                        var routes = event.get("target").getRoutes();
-                        createinf(new_routes[k].length, routes[0].properties.get("duration").text, routes[0].properties.get("distance").text)
-                    }).add("requestfail", function (event) {
-                        console.log("Error: " + event.get("error").message);
-                });
-}
-
-async function createroute(time, points){
-        var rez = {}
-        rez = await postData("def/", {"point" : points,"time": time,state:"inactive" })
-        new_routes = []
-        k = 0
-        for (let i in rez) {
-            new_routes.push(rez[i])
-        }
-        if (new_routes.length != 0){
-            addroute()
-        }
-        if(Object.keys(rez).length === 0){
-            return [[-1, -1]]
-        }
-}
+/*
 
 window.onload = function() {
-
 document.getElementById('gobtn').onclick = function () {
-    var el = document.getElementById("inforoute")
+    var el = document.getElementById('inforoute')
         if (el != null){
                 el.remove()
     }
-    var timeee = document.getElementById("time").innerHTML
+    var timeee = document.getElementById('time').innerHTML
     var inputElements = document.getElementsByClassName('messageCheckbox');
     var ob_poi = []
     for(var i = 0, l = inputElements.length; i < l; i++){
@@ -183,9 +177,10 @@ document.getElementById('gobtn').onclick = function () {
             }
         }
     myMap.geoObjects.remove(last_route)
-    createroute(timeee, ob_poi).then((result) => {
-      console.log(result)
-    })
+    createroute(timeee, ob_poi)
+
+    console.log(timeee);
+    console.log(ob_poi);
 }
 
 document.getElementById('desel').onclick = function () {
@@ -197,7 +192,7 @@ document.getElementById('desel').onclick = function () {
         }
 }
 
-document.getElementById("next").onclick = function () {
+document.getElementById('next').onclick = function () {
         if (new_routes.length != 0){
         myMap.geoObjects.remove(last_route)
         k = k+1
@@ -208,10 +203,34 @@ document.getElementById("next").onclick = function () {
     }
     }
 
-    var slider = document.getElementById("myRange");
-    var output = document.getElementById("time");
+    var slider = document.getElementById('myRange');
+    var output = document.getElementById('time');
     output.innerHTML = slider.value;
     slider.oninput = function() {
         output.innerHTML = this.value;
     }
 };
+
+
+
+ def createinf!!!
+    if (document.getElementById('info') == null){
+    var razn = $('<li id = inforoute><a id = info>количество точек : '+sumpoints+' время : '+timeroute+' длина : '+lenroute+'</a>'+ '<input type='button' id=inforoutebtn value='save'/></li>')
+    razn.appendTo($('body'))
+    var kn1 = document.getElementById('inforoutebtn')
+    kn1.onclick = function () {
+          postData('save/', {'rez':new_routes[k],state:'inactive' })
+    }
+    }
+    if (document.getElementById('info') != null){
+        document.getElementById('info').innerHTML = 'количество точек : '+sumpoints+' время : '+timeroute+' длина : '+lenroute
+    }
+
+function show_popup(){
+    var popup = document.getElementById('popup')
+             popup.classList.toggle('active')
+             window.onclick = function(event) {
+                popup.className = ''
+             }
+}
+*/

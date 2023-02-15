@@ -4,30 +4,41 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block extraheader %}
+<link type="text/css" href="{% static 'maps/css/formStyle.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
-<div class="navigator-menu">
-	<h1>{{ title }}</h1>
-	<form method="POST" action="" enctype="multipart/form-data">
-		{% csrf_token %}
-		<div>{{ form.non_field_errors }}</div>
+<div class="container">
+	<div class="wrapper">
+		<div class="title"><span>{{ title }}</span></div>
+		<form method="POST" action="" enctype="multipart/form-data">
+			{% csrf_token %}
 
-		{% for field in form %}
-		<div class="form-group">
-			<label for="{{ field.id_for_label }}">{{ field.label }}</label>
-			{% render_field field class='form-control' %}
-			<div>{{ field.help_text }}</div>
-			<div>{{ field.errors }}</div>
-		</div>
+			{% for field in form %}
+			<div class="row">
+				<i class="fas fa-user"></i>
+				<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+				{% render_field field class='form-control' %}
+				<div class="eror">{{ field.help_text }}</div>
+				<div class="eror">{{ field.errors }}</div>
+			</div>
+			{% endfor %}
 
-		{% endfor %}
+			<div class="pass">
+				{% if "login" in request.path %}
+				<a href="#">Забыли пароль?</a>
+				{% else %}
+				<a href="{% url 'login' %}">Войти?</a>
+				{% endif %}
+			</div>
 
-		<br>
-		<button type="submit" class="btn btn-primary">{{ button_text }}</button>
+			<div class="row button">
+				<input type="submit" value="{{ button_text }}">
+			</div>
+			<div class="signup-link">{{noaccount_text}} <a href="{% url 'signup' %}">{{signupurl}}</a></div>
+			<div class="eror">{{ form.non_field_errors }}</div>
 		</form>
-		<p>{{noaccount_text}}
-		<a href="{% url 'signup' %}">{{signupurl}}</a>
-		</p>
-		</div>
 	</div>
 </div>
 {% endblock %}

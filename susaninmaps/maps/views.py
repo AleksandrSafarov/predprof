@@ -1,7 +1,7 @@
 import json
 
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
