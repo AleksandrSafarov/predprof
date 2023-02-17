@@ -6,7 +6,7 @@ import datetime
 
 class Route(models.Model):
     name = models.CharField(max_length=255, default= "")
-    userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     places = models.CharField(max_length=4095, default="")
     distanceM = models.IntegerField(default=0)
     timeM = models.IntegerField(default=0)
@@ -16,7 +16,7 @@ class Route(models.Model):
         return self.name
     
     def listplaces(self):
-        return list(map(int, self.places.split(';')))
+        return self.places.split(';')
     
     def distance(self):
         if self.distanceM < 1000:
@@ -33,14 +33,21 @@ class Route(models.Model):
             return str(self.timeM // 60) + ' ч ' + str(self.timeM % 60) + ' мин'
 
 class HistoryRoute(models.Model):
-    date = models.DateTimeField(default=datetime.datetime.now() + datetime.timedelta(hours=3))
-    userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    date = models.DateTimeField(default=datetime.datetime.now())# + datetime.timedelta(hours=3) #если время записывается с разницей в 3 часа
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     places = models.CharField(max_length=4095, default="")
     distanceM = models.IntegerField(default=0)
     timeM = models.IntegerField(default=0)
     
+    def getdatetime(self):
+        return str(self.date.day).zfill(2)+'.'+str(self.date.month).zfill(2)+'.'+str(self.date.year)+' '+ str(self.date.hour).zfill(2)+':'+str(self.date.minute).zfill(2)
+
     def listplaces(self):
-        return list(map(int, self.places.split(';')))
+        return self.places.split(';')
+    
+    def countplaces(self):
+        lst = self.places.split(';')
+        return len(lst)
     
     def distance(self):
         if self.distanceM < 1000:

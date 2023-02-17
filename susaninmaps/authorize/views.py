@@ -7,8 +7,27 @@ from django.views.generic import *
 
 from .forms import *
 
+from maps.models import HistoryRoute
+
 def personalArea(request):
     return render(request, 'user/personalArea.html')
+
+class PersonalArea(TemplateView):
+    template_name = 'user/personalArea.html'
+    success_url = reverse_lazy('personalArea')
+
+    def get_queryset(self):
+        return HistoryRoute.objects.all()
+
+    def get_context_data(self, **kwargs):
+        self.extra_context = {
+            'history_routes': HistoryRoute.objects.all(),
+            'button_text': "Сохранить"
+        }
+        return super().get_context_data(**kwargs)
+        
+    def get_success_url(self):
+        return reverse_lazy('index')
 
 def logout_user(request):
     logout(request)

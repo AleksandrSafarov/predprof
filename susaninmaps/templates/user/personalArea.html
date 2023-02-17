@@ -13,25 +13,26 @@
 		<div class="name">
 			<p>История маршрутов</p>
 		</div>
+		{% for route in history_routes %}
+		{% if user.id == route.user.id %}
 		<div class="route">
 			<hr>
 			<div class="row">
 				<div class="colomn">
-					<p class="item"> Дата </p>
+					<p class="item">{{ route.getdatetime }}</p>
 				</div>
 				<hr>
 				<div class="colomn">
-					<p class="item">Кол-во точек: {{ pointsCount }} шт</p>
+					<p class="item">Кол-во точек: {{ route.countplaces }} шт</p>
 				</div>
 				<hr>
 				<div class="colomn">
-					<p class="item">Время {{ time }}</p>
+					<p class="item">Время: {{ route.time }}</p>
 				</div>
 				<hr>
 				<div class="colomn">
-					<p class="item">Длина {{ lenght }} км</p>
+					<p class="item">Длина: {{ route.distance }}</p>
 				</div>
-				<hr>
 				<div class="colomn-end">
 					<button>
 						<p class="item">Удалить</p>
@@ -42,6 +43,8 @@
 				</div>
 			</div>
 		</div>
+		{% endif %}
+		{% endfor %}
 	</div>
 	<div class="navigator-menu">
 		<div class="menu-inp">
