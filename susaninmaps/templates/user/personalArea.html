@@ -15,7 +15,7 @@
 		</div>
 		{% for route in history_routes %}
 		{% if user.id == route.user.id %}
-		<div class="route">
+		<div class="route" data-PointsLocation="{{ route.places }}">
 			<hr>
 			<div class="row">
 				<div class="colomn">
