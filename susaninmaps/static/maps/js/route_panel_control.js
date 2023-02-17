@@ -30,7 +30,7 @@ async function generateRoute(time, points) {
 
     var canBuild = (Object.keys(rez).length != 0);
     if (canBuild === false) {
-        alert('Не удалось построить маршрут.');
+        alert('Не удалось построить маршрут. Увеличьте время.');
         return false;
     }
 
@@ -95,11 +95,7 @@ class IMap {
         indexCurrentRoute: 0,
         routeList: [],
         routeColors: [
-            ['#000088', '#E63E92'],
-            ['#ff9baa', '#E63E92'],
-            ['#6a38ff', '#E63E92'],
-            ['#0f93ff', '#E63E92'],
-            ['#00856f', '#E63E92']
+            ['#BD0202', '#E63E92']
         ],
 
         next() {
@@ -113,9 +109,7 @@ class IMap {
         },
 
         getColor() {
-            // Адаптация индекса пути с кол-во дорог.
-            const index = this.indexCurrentRoute % (this.routeColors.length + 1);
-            return this.routeColors[index];
+            return this.routeColors[0];
         },
 
         get() { return this.routeList[this.indexCurrentRoute]; },
