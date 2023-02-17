@@ -5,6 +5,19 @@ $(document).ready(init);
 function init() {
     addPointMenu();
     buildRouteButton.onclick = buildRoute;
+    nextRouteButton.onclick = function() { imap.nextRoute(); };
+    saveRouteButton.onclick = function() { imap.saveRoute(); };
+    tableImage.onclick = function()
+    {
+        if(map.style.display != "none"){
+            map.style.display = "none";
+            table.style.display = "revert";
+        }
+        else{
+            map.style.display = "revert";
+            table.style.display = "none";
+        }
+    };
 }
 
 // Передает данные с html страницы в функцию построения маршрута.

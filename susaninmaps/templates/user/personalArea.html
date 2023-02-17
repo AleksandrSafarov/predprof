@@ -1,0 +1,68 @@
+{% extends 'maps/base.html' %}
+{% load static %}
+
+{% block title %}Personal Area{% endblock %}
+
+{% block extraheader %}
+<link type="text/css" href="{% static 'maps/css/areaStyle.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="navigator-ui">
+	<div class="table">
+		<div class="name">
+			<p>История маршрутов</p>
+		</div>
+		<div class="route">
+			<hr>
+			<div class="row">
+				<div class="colomn">
+					<p class="item"> Дата </p>
+				</div>
+				<hr>
+				<div class="colomn">
+					<p class="item">Кол-во точек: {{ pointsCount }} шт</p>
+				</div>
+				<hr>
+				<div class="colomn">
+					<p class="item">Время {{ time }}</p>
+				</div>
+				<hr>
+				<div class="colomn">
+					<p class="item">Длина {{ lenght }} км</p>
+				</div>
+				<hr>
+				<div class="colomn-end">
+					<button>
+						<p class="item">Удалить</p>
+					</button>
+					<button>
+						<p class="item">Построить</p>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="navigator-menu">
+		<div class="menu-inp">
+			<div class="menu-block">
+				<p>
+					Имя пользователя: {{ user.username }}
+				</p>
+			</div>
+			<div class="menu-block">
+				<p>
+					Почта: {{ user.email }}
+				</p>
+			</div>
+			<hr>
+			<div class="menu-block">
+				<a href="{% url 'changepassword' %}">Изменить пароль</a>
+			</div>
+			<div class="menu-block">
+				<a href="{% url 'edituserdata' %}">Изменить данные</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -6,7 +6,7 @@ from django.db import models
 class Route(models.Model):
     name = models.CharField(max_length=255, default= "")
     userId = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    places = models.CharField(max_length=1023, default="")
+    places = models.CharField(max_length=4095, default="")
     distanceM = models.IntegerField(default=0)
     timeM = models.IntegerField(default=0)
     isStatic = models.BooleanField(default=False)
@@ -33,7 +33,7 @@ class Route(models.Model):
 
 class Place(models.Model):
     point1 = models.CharField(max_length=255, default="")
-    point2 = models.CharField(max_length=255, default="")
+    point2 = models.CharField(max_length=4095, default="")
 
     def points(self):
         return self.point1 + ";" +  self.point2

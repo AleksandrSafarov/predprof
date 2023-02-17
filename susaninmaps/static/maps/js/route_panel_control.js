@@ -2,10 +2,6 @@ const csrftoken = getCookie('csrftoken');
 var imap;
 ymaps.ready(init);
 
-let new_routes = []
-let fillroute = [['#000088', '#E63E92'], ['#ff9baa', '#E63E92'], ['#6a38ff', '#E63E92'], ['#0f93ff', '#E63E92'], ['#00856f', '#E63E92']]//цвета маршрутов
-let k = 0
-
 function init() {
     var map = new ymaps.Map('map',
         {
@@ -29,16 +25,22 @@ async function generateRoute(time, points) {
     var rez = {}
     rez = await postData('def/', { 'point': points, 'time': time, state: 'inactive' });
 
-    var canBuild = (Object.keys(rez).length != 0);
+    clearInformation();
+    imap.clearLastRoute();
 
+    var canBuild = (Object.keys(rez).length != 0);
     if (canBuild === false) {
         alert('Не удалось построить маршрут.');
+        return false;
     }
+
     new_routes = []
     for (let i in rez) {
         new_routes.push(rez[i])
     }
-    k = 0;
+
+    imap.currentRout.updateRouteList(new_routes);
+
     imap.displayRoute();
 
     return true;
@@ -50,6 +52,11 @@ function displayInformation(pointsCount, timeroute, lenroute) {
     document.querySelector('#time').textContent = `Время: ${timeroute}`;
     document.querySelector('#lenght').innerText = `Длина: ${lenroute}`;
 }
+
+// Очищаем информацию на html странице.
+var clearInformation = function () {
+    displayInformation("", "", "");
+};
 
 
 // Работа с сервером.
@@ -84,19 +91,66 @@ function getCookie(name) {
 class IMap {
     #multiRoute;
 
+    currentRout = {
+        indexCurrentRoute: 0,
+        routeList: [],
+        routeColors: [
+            ['#000088', '#E63E92'],
+            ['#ff9baa', '#E63E92'],
+            ['#6a38ff', '#E63E92'],
+            ['#0f93ff', '#E63E92'],
+            ['#00856f', '#E63E92']
+        ],
+
+        next() {
+            if (this.indexCurrentRoute < this.routeList.length - 1) { this.indexCurrentRoute += 1; }
+            else { this.indexCurrentRoute = 0; }
+        },
+
+        updateRouteList(routeList) {
+            this.routeList = routeList;
+            this.indexCurrentRoute = 0;
+        },
+
+        getColor() {
+            // Адаптация индекса пути с кол-во дорог.
+            const index = this.indexCurrentRoute % (this.routeColors.length + 1);
+            return this.routeColors[index];
+        },
+
+        get() { return this.routeList[this.indexCurrentRoute]; },
+
+        exists() { 
+            if (this.get() === undefined) {
+                alert("Не выбран маршрут!");
+                return false;
+            }
+            return true;
+        }
+    };
+
     constructor(map) {
         this.map = map;
 
         this.#syncLiksWithPoints();
     }
 
+    nextRoute() {
+        this.currentRout.next();
+        this.displayRoute();
+    }
+
     /* Отрисовка маршрута на карте. */
     displayRoute() {
-        this.#clearLastRoute();
+        if (this.currentRout.exists() === false) {
+            return;
+        }
+
+        this.clearLastRoute();
 
         this.#multiRoute = new ymaps.multiRouter.MultiRoute(
             {
-                referencePoints: new_routes[k],
+                referencePoints: this.currentRout.get(),
                 params: {
                     routingMode: 'pedestrian'
                 }
@@ -106,29 +160,42 @@ class IMap {
                 wayPointStartIconFillColor: '#B3B3B3',
 
                 routeStrokeWidth: 2,
-                routeStrokeColor: fillroute[k],
+                routeStrokeColor: this.currentRout.getColor(),
                 routeActiveStrokeWidth: 6,
-                routeActiveStrokeColor: fillroute[k],
+                routeActiveStrokeColor: this.currentRout.getColor(),
 
-                routeActivePedestrianSegmentStrokeStyle: fillroute[k],
-                routeActivePedestrianSegmentStrokeColor: fillroute[k],
+                routeActivePedestrianSegmentStrokeStyle: this.currentRout.getColor(),
+                routeActivePedestrianSegmentStrokeColor: this.currentRout.getColor(),
                 boundsAutoApply: true
             });
 
         this.map.geoObjects.add(this.#multiRoute);
 
+        const pointsCount = this.currentRout.get().length;
         this.#multiRoute.model.events.add(
             'requestsuccess',
             function (event) {
                 const routeProperties = event.get('target').getRoutes()[0].properties;
                 displayInformation(
-                    new_routes[k].length,
+                    pointsCount,
                     routeProperties.get('duration').text.slice(0, -1),
                     routeProperties.get('distance').text
                 );
             }
         ).add('requestfail', function (event) {
             console.log('Error: ' + event.get('error').message);
+        });
+    }
+
+    /* Сохранение маршрута в базе данных. */
+    saveRoute() {
+        if (this.currentRout.exists() === false) {
+            return;
+        }
+        
+        postData("save/", {
+            "rez": this.currentRout.get(),
+            state: "inactive"
         });
     }
 
@@ -148,16 +215,13 @@ class IMap {
             collection.add(placemark);
 
             pointTextLink.onclick = function () {
-                if (placemark.balloon.isOpen()) {
-                    placemark.balloon.close();
-                } else {
-                    placemark.balloon.open();
-                }
+                if (placemark.balloon.isOpen()) { placemark.balloon.close(); }
+                else { placemark.balloon.open(); }
             };
         });
     }
 
-    #clearLastRoute() { this.map.geoObjects.remove(this.#multiRoute); }
+    clearLastRoute = function () { this.map.geoObjects.remove(this.#multiRoute); };
 }
 
 /*
@@ -219,7 +283,7 @@ document.getElementById('next').onclick = function () {
     razn.appendTo($('body'))
     var kn1 = document.getElementById('inforoutebtn')
     kn1.onclick = function () {
-          postData('save/', {'rez':new_routes[k],state:'inactive' })
+          postData('save/', {'rez':this.currentRout.get(),state:'inactive' })
     }
     }
     if (document.getElementById('info') != null){

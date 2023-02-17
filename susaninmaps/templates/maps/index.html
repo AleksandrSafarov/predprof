@@ -4,12 +4,52 @@
 {% block title %}SusaninMaps{% endblock %}
 
 {% block extraheader %}
+<script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=fb7a5e56-ed1e-42cb-a964-401ada1e3cb7" type="text/javascript"></script>
+<script src="{% static 'maps/js/groups.js' %}"></script>
 <script src="{% static 'maps/js/script.js' %}" type="text/javascript"></script>
+<script src="{% static 'maps/js/route_panel_control.js' %}"></script>
+<link type="text/css" href="{% static 'maps/css/areaStyle.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
 <div class="navigator-ui">
     <div id="map" class="map"></div>
+
+    <div class="table" id="table">
+		<div class="name">
+			<p>История маршрутов</p>
+		</div>
+		<div class="route" data-pointsLocation="">
+			<hr>
+			<div class="row">
+				<div class="colomn">
+					<p class="item"> Дата </p>
+				</div>
+				<hr>
+				<div class="colomn">
+					<p class="item">Кол-во точек: {{ pointsCount }} шт</p>
+				</div>
+				<hr>
+				<div class="colomn">
+					<p class="item">Время {{ time }}</p>
+				</div>
+				<hr>
+				<div class="colomn">
+					<p class="item">Длина {{ lenght }} км</p>
+				</div>
+				<hr>
+				<div class="colomn-end">
+					<button>
+						<p class="item">Удалить</p>
+					</button>
+					<button>
+						<p class="item">Построить</p>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
     <div class="navigator-menu">
 
@@ -22,39 +62,52 @@
             </div>
 
             <div class="menu-block">
-                
+
                 <select class="time-limit" name="time-limit" id="timeLimit">
-                    <option selected disabled value="15">Ограничение по времени</option>
+                    <option selected value="120">Нет ограничений по времени</option>
+                    <option value="10">10мин</option>
                     <option value="15">15мин</option>
+                    <option value="20">20мин</option>
+                    <option value="25">25мин</option>
                     <option value="30">30мин</option>
                     <option value="45">45мин</option>
                     <option value="60">1ч</option>
-                    <option value="75">1ч 15мин</option>
+                    <option value="70">1ч 10мин</option>
+                    <option value="80">1ч 20мин</option>
                     <option value="90">1ч 30мин</option>
-                    <option value="105">1ч 45мин</option>
-                    <option value="120">2ч</option>
-                    <option value="135">2ч 15мин</option>
-                    <option value="150">2ч 30мин</option>
-                    <option value="165">2ч 45мин</option>
-                    <option value="180">3ч</option>
+                    <option value="100">1ч 40мин</option>
                 </select>
             </div>
 
             <hr>
 
             <div class="menu-block">
-                <p> Места посещения </p>
+                <div class="routeInput">
+                    <p>Места посещения</p>
+
+                    <img src="{% static 'maps/images/table.png' %}" сlass="table-img" id="tableImage" alt=''>
+                </div>
 
                 <div class="points" id="points">
                     <template id="point">
                         <div class="point" data-location="">
-                            <input type="checkbox" id="isVisit" unchecked>
+                            <input type="checkbox" id="isVisit" onclick="" unchecked>
                             <a href="#"></a>
                         </div>
                     </template>
                 </div>
 
-                <a class="build-route" id="buildRouteButton">Построить маршрут</a>
+                <div class="routeInput">
+                    <button class="button-route" id="buildRouteButton">
+                        <p>Построить маршрут</p>
+                    </button>
+                    <button class="button-route" id="nextRouteButton">
+                        <p>Следующий</p>
+                    </button>
+                    <button class="button-route" id="saveRouteButton">
+                        <p>Сохранить</p>
+                    </button>
+                </div>
             </div class="menu-block">
 
             <hr>
