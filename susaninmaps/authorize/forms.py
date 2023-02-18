@@ -8,7 +8,7 @@ class SignUpForm(UserCreationForm):
         label="", 
         widget=forms.TextInput(attrs={'placeholder': "Логин"})
         )
-    mail=forms.CharField(
+    email=forms.CharField(
         label="",
         widget=forms.EmailInput(attrs={'placeholder': "E-mail"})
     )
@@ -23,7 +23,7 @@ class SignUpForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ('username', 'mail', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2')
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
