@@ -22,7 +22,7 @@
 			<p>Общие маршруты</p>
 		</div>
         {% for route in static_routes %}
-            <div class="route" id="route" data-id="{{ route.id }}" data-points-location="{{ route.places }}">
+            <div class="route" id="route" data-id="{{ route.id }}" data-pointslocation="{{ route.places }}">
                 <hr>
                 <div class="row">
                     <div class="column">
@@ -53,6 +53,7 @@
             </div>
         
         {% endfor %}
+        {% if request.user.is_authenticated %}
 
         <hr>
 
@@ -61,7 +62,7 @@
 		</div>
 
         <template id="routeTemplate">
-            <div class="route" id="route" data-id="" data-pointsLocation="">
+            <div class="route" id="route" data-id="" data-pointslocation="">
                 <hr>
                 <div class="row">
                     <div class="column">
@@ -94,7 +95,7 @@
         
         {% for route in user_routes %}
         {% if route.user.id == user.id %}
-            <div class="route" id="route" data-id="{{ route.id }}" data-points-location="{{ route.places }}">
+            <div class="route" id="route" data-id="{{ route.id }}" data-pointslocation="{{ route.places }}">
                 <hr>
                 <div class="row">
                     <div class="column">
@@ -126,6 +127,7 @@
         
         {% endif %}
         {% endfor %}
+        {% endif %}
 	</div>
 
     <div class="navigator-menu">

@@ -24,11 +24,6 @@ function buildRoute() {
     timeLimit = document.getElementById('timeLimit').value;
 
     var canBuild = generateRoute(timeLimit, Array.from(placesLocation));
-
-    // TODO: Не работает пока не исправлена асинхронка.
-    if (canBuild === false) {
-        alert('Не удалось построить маршрут.');
-    }
 }
 
 // Сохранение маршрута.
@@ -46,9 +41,9 @@ function saveRoute() {
 }
 
 // Удаление маршрута.
-function removeRoute(element, fromHistory=false) {
+function removeRoute(element, fromHistory = false) {
     parent = element.closest('#route');
-    
+
     var path = 'remove/';
     if (fromHistory) { path = 'removeFromHistory/'; }
 
@@ -71,8 +66,7 @@ function addRouteInTable(date, count, time, length, pointsLocation, id) {
     const routeTime = template.content.querySelector('#routeTimeData');
     const routeLenght = template.content.querySelector('#routeLenghtData');
 
-    routeDiv.dataset.pointsLocation = JSON.stringify(pointsLocation);
-    routeDiv.dataset.pointsLocation = id;
+    routeDiv.dataset.pointslocation = JSON.stringify(pointsLocation);
     dateRoute.textContent = `${date}`;
     pointsCount.textContent = `Кол-во точек: ${count} шт`;
     routeTime.textContent = `${time}`;
@@ -84,7 +78,7 @@ function addRouteInTable(date, count, time, length, pointsLocation, id) {
 
 // Отрисовка маршруты из таблицы.
 function showRoute(element) {
-    var currentRout = JSON.parse(element.closest('#route').dataset.pointsLocation);
+    var currentRout = JSON.parse(element.closest('#route').dataset.pointslocation);
     console.log(currentRout)
 
     imap.currentRout.indexCurrentRoute = currentRout.indexCurrentRoute;

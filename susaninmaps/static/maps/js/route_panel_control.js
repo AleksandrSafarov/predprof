@@ -179,6 +179,7 @@ class IMap {
                 const routeProperties = event.get('target').getRoutes()[0].properties;
                 imap.currentRout.length = routeProperties.get('distance').text;
                 imap.currentRout.timeLenght = routeProperties.get('duration').text.slice(0, -1);
+                imap.saveRoute(true);
                 displayInformation(
                     imap.currentRout.getPointsCount(),
                     imap.currentRout.timeLenght,
@@ -188,8 +189,6 @@ class IMap {
         ).add('requestfail', function (event) {
             console.log('Error: ' + event.get('error').message);
         });
-
-        this.saveRoute(true);
     }
 
     /* Сохранение маршрута в базе данных. */
