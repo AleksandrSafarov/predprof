@@ -16,7 +16,10 @@ function init() {
         placesLocation.clear();
     };
 
-    clearMap.onclick = function () { imap.clearLastRoute(); }
+    clearMap.onclick = function () { 
+        imap.clearLastRoute();
+        clearInformation();
+     }
 }
 
 // Передает данные с html страницы в функцию построения маршрута.
