@@ -5,6 +5,7 @@
 
 {% block extraheader %}
 <link type="text/css" href="{% static 'maps/css/areaStyle.css' %}" rel="stylesheet">
+<script src="{% static 'maps/js/personalArea.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -15,25 +16,25 @@
 		</div>
 		{% for route in history_routes %}
 		{% if user.id == route.user.id %}
-		<div class="route" data-PointsLocation="{{ route.places }}">
+		<div class="route" id="route" data-pointsLocation="{{ route.places }}">
 			<hr>
 			<div class="row">
-				<div class="colomn">
+				<div class="column">
 					<p class="item">{{ route.getdatetime }}</p>
 				</div>
 				<hr>
-				<div class="colomn">
+				<div class="column">
 					<p class="item">Кол-во точек: {{ route.countplaces }} шт</p>
 				</div>
 				<hr>
-				<div class="colomn">
+				<div class="column">
 					<p class="item">Время: {{ route.time }}</p>
 				</div>
 				<hr>
-				<div class="colomn">
+				<div class="column">
 					<p class="item">Длина: {{ route.distance }}</p>
 				</div>
-				<div class="colomn-end">
+				<div class="column-end">
 					<button>
 						<p class="item">Удалить</p>
 					</button>
@@ -45,6 +46,36 @@
 		</div>
 		{% endif %}
 		{% endfor %}
+		<div class="route" id="route" data-id="" data-pointslocation="" data-points-location="[&quot;55.826249, 37.637578&quot;,&quot;55.826591, 37.638033&quot;,&quot;55.828042, 37.634724&quot;,&quot;55.828598, 37.633872&quot;,&quot;55.829880, 37.635126&quot;,&quot;55.829970, 37.633791&quot;,&quot;55.830684, 37.633393&quot;,&quot;55.830932, 37.632602&quot;,&quot;55.831620, 37.631933&quot;,&quot;55.832879, 37.631125&quot;,&quot;55.832802, 37.629093&quot;,&quot;55.833269, 37.628130&quot;,&quot;55.832645, 37.627215&quot;,&quot;55.832086, 37.625830&quot;,&quot;55.831620, 37.626761&quot;,&quot;55.831259, 37.627590&quot;,&quot;55.830965, 37.628065&quot;,&quot;55.830596, 37.628529&quot;,&quot;55.830239, 37.629268&quot;]">
+			<hr>
+			<div class="row">
+				<div class="column">
+					<p class="item" id="dateRouteData">18.02.2023, 21:19</p>
+				</div>
+				<hr>
+				<div class="column">
+					<p class="item" id="pointsCountData">Кол-во точек: 19 шт</p>
+				</div>
+				<hr>
+				<div class="column">
+					<p class="item" id="routeTimeData">30&nbsp;мин</p>
+				</div>
+				<hr>
+				<div class="column">
+					<p class="item" id="routeLenghtData">2,5 км</p>
+				</div>
+				<hr>
+				<div class="column-end">
+					<button onclick="removeRoute(this)">
+						<p class="item">Удалить</p>
+					</button>
+					<button onclick="showRouteFromHistory(this)">
+						<p class="item">Построить</p>
+					</button>
+				</div>
+			</div>
+		</div>
+		
 	</div>
 	<div class="navigator-menu">
 		<div class="menu-inp">

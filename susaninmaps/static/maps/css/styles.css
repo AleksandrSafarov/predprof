@@ -24,7 +24,7 @@ h1 {
 }
 
 a:hover {
-    margin-top: 2px;
+
     border-bottom: 3px solid var(--hr-color);
 }
 
@@ -117,10 +117,8 @@ nav {
 .navigator-ui {
     display: flex;
 
-    height: 80vh;
-
+    height: fit-content;
     margin-top: 5vh;
-    margin-bottom: 30px;
     margin-left: 75px;
     margin-right: 75px;
 }
@@ -128,7 +126,7 @@ nav {
 .map,
 .table {
     width: 70vw;
-    height: flex;
+    height: 80vh;
 }
 
 .map a {
@@ -214,6 +212,17 @@ nav {
     margin-bottom: 4px;
 }
 
+.point {
+    margin-left: 15px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.pointT {
+    margin-left: 15px;
+    margin-top: 10px;
+}
+
 .build-route {
     width: fit-content;
 }
@@ -238,7 +247,7 @@ nav {
     display: inline-flex;
 }
 
-.button-route p{
+.button-route p {
     font-size: 15px;
     margin-left: 5px;
     margin-right: 5px;
@@ -250,10 +259,13 @@ nav {
     margin-top: -6px;
     height: 35px;
     width: 35px;
+    cursor: pointer;
 }
 
-#table{
+#table {
     display: none;
+    margin-top: -5px;
+    margin-right: -5px;
 }
 
 /*--------------------------other-------------------------*/
@@ -276,10 +288,48 @@ button {
     opacity: 1;
 }
 
-
-button:hover{
+button:hover {
     background-color: #0000005d;
     border: 1px solid #6f7e9165;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--hr-color);
+    border-radius: 5px;
+    height: 20%;
+}
+
+::-webkit-scrollbar-track {
+    background: #00000036;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+select {
+    border: 1px solid #ffffff00;
+    border-radius: 5px;
+    padding: 5px 5px;
+    cursor: pointer;
+    line-height: 1.1;
+    background-color: #281e32ce;
+    color: var(--text-color);
+}
+
+input {
+    cursor: pointer;
+}
+
+select::after {
+    content: "";
+    width: 0.8em;
+    height: 0.5em;
+    clip-path: polygon(100% 0%, 0 0%, 50% 100%);
 }
 
 /*------------------------adaptive------------------------*/
@@ -287,6 +337,12 @@ button:hover{
 @media screen and (max-height: 850px) {
     .points {
         height: 20vh;
+    }
+}
+
+@media screen and (min-width: 2000px) {
+    .routeInput img {
+        right: 11vw;
     }
 }
 
@@ -360,7 +416,7 @@ button:hover{
         align-content: center;
         align-items: center;
         flex-direction: row;
-    
+
     }
 }
 

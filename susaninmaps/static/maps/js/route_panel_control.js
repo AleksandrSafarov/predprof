@@ -18,6 +18,7 @@ function init() {
         });
 
     imap = new IMap(map);
+    redirectCheck();
 }
 
 async function generateRoute(time, points) {
@@ -50,12 +51,12 @@ async function generateRoute(time, points) {
 function displayInformation(pointsCount, timeroute, lenroute) {
     document.querySelector('#pointsCount').textContent = `Кол-во точек: ${pointsCount} шт`;
     document.querySelector('#time').textContent = `Время: ${timeroute}`;
-    document.querySelector('#lenght').innerText = `Длина: ${lenroute}`;
+    document.querySelector('#lenght').innerText = `Длина: ${lenroute} км`;
 }
 
 // Очищаем информацию на html странице.
 var clearInformation = function () {
-    displayInformation("", "", "");
+    displayInformation('0', '0 мин', '0 км');
 };
 
 
@@ -95,8 +96,13 @@ class IMap {
         indexCurrentRoute: 0,
         routeList: [],
         routeColors: [
-            ['#BD0202', '#E63E92']
+            ['#BD0202', '#E63E92'],
+            ['', '']
         ],
+
+        pointsCount: 0,
+        length: 0,
+        timeLenght: 0,
 
         next() {
             if (this.indexCurrentRoute < this.routeList.length - 1) { this.indexCurrentRoute += 1; }
@@ -109,14 +115,15 @@ class IMap {
         },
 
         getColor() {
-            return this.routeColors[0];
+            const i = this.indexCurrentRoute % this.routeColors.length;
+            return this.routeColors[i];
         },
 
         get() { return this.routeList[this.indexCurrentRoute]; },
 
-        exists() { 
+        exists() {
             if (this.get() === undefined) {
-                alert("Не выбран маршрут!");
+                alert('Не выбран маршрут!');
                 return false;
             }
             return true;
@@ -165,15 +172,17 @@ class IMap {
 
         this.map.geoObjects.add(this.#multiRoute);
 
-        const pointsCount = this.currentRout.get().length;
+        this.currentRout.pointsCount = this.currentRout.get().length;
         this.#multiRoute.model.events.add(
             'requestsuccess',
             function (event) {
                 const routeProperties = event.get('target').getRoutes()[0].properties;
+                imap.currentRout.length = routeProperties.get('distance').text.slice(0, -3);
+                imap.currentRout.timeLenght = routeProperties.get('duration').text.slice(0, -1);
                 displayInformation(
-                    pointsCount,
-                    routeProperties.get('duration').text.slice(0, -1),
-                    routeProperties.get('distance').text
+                    imap.currentRout.pointsCount,
+                    imap.currentRout.timeLenght,
+                    imap.currentRout.length
                 );
             }
         ).add('requestfail', function (event) {
@@ -186,20 +195,21 @@ class IMap {
         if (this.currentRout.exists() === false) {
             return;
         }
-        
-        postData("save/", {
-            "rez": this.currentRout.get(),
-            state: "inactive"
+
+        postData('save/', {
+            'rez': JSON.stringify(this.currentRout.get()),
+            state: 'inactive'
         });
     }
 
     /* Синхронизация ссылок меню с точками на карте. */
     #syncLiksWithPoints() {
-        const pointTextLinks = document.querySelector('#points').querySelectorAll('a');
+        const pointText = document.querySelectorAll('#point');
         const collection = new ymaps.GeoObjectCollection(null, { preset: ' ' });
         this.map.geoObjects.add(collection);
 
-        pointTextLinks.forEach(function callback(pointTextLink, index, array) {
+        pointText.forEach(function callback(pointText, index, array) {
+            const pointTextLink = pointText.querySelector('a');
             const location = pointTextLink.parentElement.dataset.location.split(',');
             const name = pointTextLink.textContent;
 
@@ -217,78 +227,3 @@ class IMap {
 
     clearLastRoute = function () { this.map.geoObjects.remove(this.#multiRoute); };
 }
-
-/*
-
-window.onload = function() {
-document.getElementById('gobtn').onclick = function () {
-    var el = document.getElementById('inforoute')
-        if (el != null){
-                el.remove()
-    }
-    var timeee = document.getElementById('time').innerHTML
-    var inputElements = document.getElementsByClassName('messageCheckbox');
-    var ob_poi = []
-    for(var i = 0, l = inputElements.length; i < l; i++){
-            if(inputElements[i].checked){
-                ob_poi.push(inputElements[i].name)
-            }
-        }
-    myMap.geoObjects.remove(last_route)
-    createroute(timeee, ob_poi)
-
-    console.log(timeee);
-    console.log(ob_poi);
-}
-
-document.getElementById('desel').onclick = function () {
-        var inputElements = document.getElementsByClassName('messageCheckbox')
-        for(var i = 0, l = inputElements.length; i < l; i++){
-            if(inputElements[i].checked){
-                inputElements[i].checked = false
-            }
-        }
-}
-
-document.getElementById('next').onclick = function () {
-        if (new_routes.length != 0){
-        myMap.geoObjects.remove(last_route)
-        k = k+1
-        if (k == new_routes.length){
-            k = 0
-        }
-        addroute()
-    }
-    }
-
-    var slider = document.getElementById('myRange');
-    var output = document.getElementById('time');
-    output.innerHTML = slider.value;
-    slider.oninput = function() {
-        output.innerHTML = this.value;
-    }
-};
-
-
-
- def createinf!!!
-    if (document.getElementById('info') == null){
-    var razn = $('<li id = inforoute><a id = info>количество точек : '+sumpoints+' время : '+timeroute+' длина : '+lenroute+'</a>'+ '<input type='button' id=inforoutebtn value='save'/></li>')
-    razn.appendTo($('body'))
-    var kn1 = document.getElementById('inforoutebtn')
-    kn1.onclick = function () {
-          postData('save/', {'rez':this.currentRout.get(),state:'inactive' })
-    }
-    }
-    if (document.getElementById('info') != null){
-        document.getElementById('info').innerHTML = 'количество точек : '+sumpoints+' время : '+timeroute+' длина : '+lenroute
-    }
-
-function show_popup(){
-    var popup = document.getElementById('popup')
-             popup.classList.toggle('active')
-             window.onclick = function(event) {
-                popup.className = ''
-             }
-}
-*/

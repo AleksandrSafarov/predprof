@@ -18,32 +18,65 @@
 
     <div class="table" id="table">
 		<div class="name">
-			<p>История маршрутов</p>
+			<p>Сохраненные маршруты</p>
 		</div>
-		<div class="route" data-pointsLocation="">
+
+        <template id="routeTemplate">
+            <div class="route" id="route" data-id="" data-pointsLocation="">
+                <hr>
+                <div class="row">
+                    <div class="column">
+                        <p class="item" id="dateRouteData"> Дата </p>
+                    </div>
+                    <hr>
+                    <div class="column">
+                        <p class="item" id="pointsCountData">Кол-во точек: {{ pointsCount }} шт</p>
+                    </div>
+                    <hr>
+                    <div class="column">
+                        <p class="item" id="routeTimeData">Время {{ time }}</p>
+                    </div>
+                    <hr>
+                    <div class="column">
+                        <p class="item" id="routeLenghtData">Длина {{ lenght }} км</p>
+                    </div>
+                    <hr>
+                    <div class="column-end">
+                        <button onclick="removeRoute(this)">
+                            <p class="item">Удалить</p>
+                        </button>
+                        <button onclick="showRoute(this)">
+                            <p class="item">Построить</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+		<div class="route" id="route" data-id="" data-pointsLocation="">
 			<hr>
 			<div class="row">
-				<div class="colomn">
+				<div class="column">
 					<p class="item"> Дата </p>
 				</div>
 				<hr>
-				<div class="colomn">
+				<div class="column">
 					<p class="item">Кол-во точек: {{ pointsCount }} шт</p>
 				</div>
 				<hr>
-				<div class="colomn">
+				<div class="column">
 					<p class="item">Время {{ time }}</p>
 				</div>
 				<hr>
-				<div class="colomn">
+				<div class="column">
 					<p class="item">Длина {{ lenght }} км</p>
 				</div>
 				<hr>
-				<div class="colomn-end">
-					<button>
+				<div class="column-end">
+                    <button onclick="removeRoute(this)">
 						<p class="item">Удалить</p>
 					</button>
-					<button>
+					<button onclick="showRoute(this)">
 						<p class="item">Построить</p>
 					</button>
 				</div>
@@ -64,21 +97,19 @@
             <div class="menu-block">
 
                 <select class="time-limit" name="time-limit" id="timeLimit">
-                    <option selected value="256">Нет ограничений по времени</option>
-                    <option value="10">10мин</option>
-                    <option value="15">15мин</option>
-                    <option value="20">20мин</option>
-                    <option value="25">25мин</option>
-                    <option value="30">30мин</option>
-                    <option value="40">40мин</option>
-                    <option value="50">50мин</option>
-                    <option value="60">1ч</option>
-                    <option value="70">1ч 10мин</option>
-                    <option value="80">1ч 20мин</option>
-                    <option value="90">1ч 30мин</option>
-                    <option value="100">1ч 40мин</option>
-                    <option value="110">1ч 50мин</option>
-                    <option value="120">2ч</option>
+                    <option selected value="250">Нет ограничений по времени</option>
+                    <option value="10">Лимит по времени: 10мин</option>
+                    <option value="20">Лимит по времени: 20мин</option>
+                    <option value="30">Лимит по времени: 30мин</option>
+                    <option value="40">Лимит по времени: 40мин</option>
+                    <option value="50">Лимит по времени: 50мин</option>
+                    <option value="60">Лимит по времени: 1ч</option>
+                    <option value="70">Лимит по времени: 1ч 10мин</option>
+                    <option value="80">Лимит по времени: 1ч 20мин</option>
+                    <option value="90">Лимит по времени: 1ч 30мин</option>
+                    <option value="100">Лимит по времени: 1ч 40мин</option>
+                    <option value="110">Лимит по времени: 1ч 50мин</option>
+                    <option value="120">Лимит по времени: 2ч</option>
                 </select>
             </div>
 
@@ -92,12 +123,16 @@
                 </div>
 
                 <div class="points" id="points">
-                    <template id="point">
+                    <template id="pointTemplate">
                         <div class="point" data-location="">
                             <input type="checkbox" id="isVisit" onclick="" unchecked>
-                            <a href="#"></a>
+                            <a></a>
                         </div>
                     </template>
+
+                    <a class="pointT" id="clearList">Очистить список</a>
+                    <a class="pointT" id="clearMap">Очистить карту</a>
+                    <hr>
                 </div>
 
                 <div class="routeInput">
@@ -107,9 +142,11 @@
                     <button class="button-route" id="nextRouteButton">
                         <p>Следующий</p>
                     </button>
-                    <button class="button-route" id="saveRouteButton">
+                    {% if request.user.is_authenticated %}
+                    <button class="button-route" id="saveRouteButton" onclick="saveRoute()">
                         <p>Сохранить</p>
                     </button>
+                    {% endif %}
                 </div>
             </div class="menu-block">
 

@@ -40,7 +40,7 @@ class HistoryRoute(models.Model):
     timeM = models.IntegerField(default=0)
     
     def getdatetime(self):
-        return str(self.date.day).zfill(2)+'.'+str(self.date.month).zfill(2)+'.'+str(self.date.year)+' '+ str(self.date.hour).zfill(2)+':'+str(self.date.minute).zfill(2)
+        return str(self.date.day).zfill(2)+'.'+str(self.date.month).zfill(2)+'.'+str(self.date.year)+', '+ str(self.date.hour).zfill(2)+':'+str(self.date.minute).zfill(2)
 
     def listplaces(self):
         return self.places.split(';')
