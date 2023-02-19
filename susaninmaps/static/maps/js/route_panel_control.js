@@ -51,7 +51,7 @@ async function generateRoute(time, points) {
 function displayInformation(pointsCount, timeroute, lenroute) {
     document.querySelector('#pointsCount').textContent = `Кол-во точек: ${pointsCount} шт`;
     document.querySelector('#time').textContent = `Время: ${timeroute}`;
-    document.querySelector('#lenght').innerText = `Длина: ${lenroute} км`;
+    document.querySelector('#lenght').innerText = `Длина: ${lenroute}`;
 }
 
 // Очищаем информацию на html странице.
@@ -100,7 +100,6 @@ class IMap {
             ['', '']
         ],
 
-        pointsCount: 0,
         length: 0,
         timeLenght: 0,
 
@@ -118,6 +117,8 @@ class IMap {
             const i = this.indexCurrentRoute % this.routeColors.length;
             return this.routeColors[i];
         },
+
+        getPointsCount() { return this.routeList[this.indexCurrentRoute].length; },
 
         get() { return this.routeList[this.indexCurrentRoute]; },
 
@@ -172,15 +173,14 @@ class IMap {
 
         this.map.geoObjects.add(this.#multiRoute);
 
-        this.currentRout.pointsCount = this.currentRout.get().length;
         this.#multiRoute.model.events.add(
             'requestsuccess',
             function (event) {
                 const routeProperties = event.get('target').getRoutes()[0].properties;
-                imap.currentRout.length = routeProperties.get('distance').text.slice(0, -3);
+                imap.currentRout.length = routeProperties.get('distance').text;
                 imap.currentRout.timeLenght = routeProperties.get('duration').text.slice(0, -1);
                 displayInformation(
-                    imap.currentRout.pointsCount,
+                    imap.currentRout.getPointsCount(),
                     imap.currentRout.timeLenght,
                     imap.currentRout.length
                 );
@@ -188,16 +188,26 @@ class IMap {
         ).add('requestfail', function (event) {
             console.log('Error: ' + event.get('error').message);
         });
+
+        this.saveRoute(true);
     }
 
     /* Сохранение маршрута в базе данных. */
-    saveRoute() {
+    saveRoute(toHistory = false) {
         if (this.currentRout.exists() === false) {
             return;
         }
+        const date = new Date();
+        const dateFormat = `${date.toLocaleString()}`.slice(0, -3);
 
-        postData('save/', {
-            'rez': JSON.stringify(this.currentRout.get()),
+        var path = 'save/';
+        if (toHistory) { path = 'saveToHistory/'; }
+
+        return postData(path, {
+            "route": JSON.stringify(this.currentRout),
+            "date": dateFormat,
+            "pointsCount": this.currentRout.getPointsCount(),
+            "userInfo": document.getElementById("userInfo").innerText,
             state: 'inactive'
         });
     }

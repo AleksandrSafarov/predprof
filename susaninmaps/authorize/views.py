@@ -21,8 +21,7 @@ class PersonalArea(TemplateView):
 
     def get_context_data(self, **kwargs):
         self.extra_context = {
-            'history_routes': HistoryRoute.objects.all(),
-            'button_text': "Сохранить"
+            'history_routes': HistoryRoute.objects.all()
         }
         return super().get_context_data(**kwargs)
         

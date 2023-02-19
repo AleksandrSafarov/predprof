@@ -5,7 +5,9 @@ from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import *
 
-from maps.models import Route
+from maps.models import *
+
+from django.contrib.auth.models import User
 
 from .models import *
 
@@ -22,9 +24,8 @@ class Index(TemplateView):
 
     def get_context_data(self, **kwargs):
         self.extra_context = {
-            'static_routes': Route.objects.filter(isStatic=True),
-            'user_routes': Route.objects.filter(isStatic=False),
-            'button_text': "Сохранить"
+            'user_routes': Route.objects.all(),
+            'static_routes': StaticRoute.objects.all()
         }
         return super().get_context_data(**kwargs)
         
@@ -32,10 +33,39 @@ class Index(TemplateView):
         return reverse_lazy('index')
 
 def save(request):
-    routes = json.loads(request.body.decode('utf-8'))["rez"]
+    route = json.loads(request.body.decode('utf-8'))["route"]
+    length = json.loads(route)["length"]
+    timeLength = json.loads(route)["timeLenght"]
+    pointsCount = json.loads(request.body.decode('utf-8'))["pointsCount"]
+    userInfo = json.loads(request.body.decode('utf-8'))["userInfo"].replace(' ', '')
+    selectedUser = User.objects.filter(username=userInfo)[0]
+    Route.objects.create(user = selectedUser, places=route, distance=length, time=timeLength, countPoints=pointsCount)
+    print(route)
 
-    print(routes)#тут json такого вида {'1': ['55.826591, 37.638033', '55.826249, 37.637578'], '2': ['55.826591, 37.638033', '55.828598, 37.633872']}
-    #номер маршрута от 1 до 5 строкой и далее сам маршрут - список поинтов
+    return HttpResponse(request)
+
+def remove(request):
+    id = json.loads(request.body.decode('utf-8'))["id"]
+    Route.objects.filter(id=id).delete()
+    return HttpResponse(request)
+
+def saveToHistory(request):
+    route = json.loads(request.body.decode('utf-8'))["route"]
+    length = json.loads(route)["length"]
+    timeLength = json.loads(route)["timeLenght"]
+    pointsCount = json.loads(request.body.decode('utf-8'))["pointsCount"]
+    userInfo = json.loads(request.body.decode('utf-8'))["userInfo"].replace(' ', '')
+    selectedUser = User.objects.filter(username=userInfo)[0]
+    print(route)
+
+    HistoryRoute.objects.create(user = selectedUser, places=route, distance=length, time=timeLength, countPoints=pointsCount)
+
+    print(timeLength)
+    return HttpResponse(request)
+
+def removeFromHistory(request):
+    id = json.loads(request.body.decode('utf-8'))["id"]
+    HistoryRoute.objects.filter(id=id).delete()
     return HttpResponse(request)
 
 @csrf_exempt

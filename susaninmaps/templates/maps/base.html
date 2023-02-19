@@ -41,7 +41,7 @@
                     
                     {% if request.user.is_authenticated %}
     
-                    <a href="{% url 'personalArea' %}">
+                    <a href="{% url 'personalArea' %}" id="userInfo">
                         <img src="{% static 'maps/images/AccountIcon.png' %}" alt="">
                          {{user.username}}
                     </a>

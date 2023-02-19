@@ -17,6 +17,45 @@
     <div id="map" class="map"></div>
 
     <div class="table" id="table">
+        
+        <div class="name">
+			<p>Общие маршруты</p>
+		</div>
+        {% for route in static_routes %}
+            <div class="route" id="route" data-id="{{ route.id }}" data-points-location="{{ route.places }}">
+                <hr>
+                <div class="row">
+                    <div class="column">
+                        <p class="item" id="dateRouteData">{{ route.name }}</p>
+                    </div>
+                    <hr>
+                    <div class="column">
+                        <p class="item" id="pointsCountData">Кол-во точек: {{ route.countPoints }} шт</p>
+                    </div>
+                    <hr>
+                    <div class="column">
+                        <p class="item" id="routeTimeData">{{ route.time }}</p>
+                    </div>
+                    <hr>
+                    <div class="column">
+                        <p class="item" id="routeLenghtData">{{ route.distance }}</p>
+                    </div>
+                    <hr>
+                    <div class="column-end">
+                        <button onclick="removeRoute(this)">
+                            <p class="item">Удалить</p>
+                        </button>
+                        <button onclick="showRoute(this)">
+                            <p class="item">Построить</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        
+        {% endfor %}
+
+        <hr>
+
 		<div class="name">
 			<p>Сохраненные маршруты</p>
 		</div>
@@ -38,7 +77,7 @@
                     </div>
                     <hr>
                     <div class="column">
-                        <p class="item" id="routeLenghtData">Длина {{ lenght }} км</p>
+                        <p class="item" id="routeLenghtData">Длина {{ lenght }}</p>
                     </div>
                     <hr>
                     <div class="column-end">
@@ -52,36 +91,41 @@
                 </div>
             </div>
         </template>
-
-		<div class="route" id="route" data-id="" data-pointsLocation="">
-			<hr>
-			<div class="row">
-				<div class="column">
-					<p class="item"> Дата </p>
-				</div>
-				<hr>
-				<div class="column">
-					<p class="item">Кол-во точек: {{ pointsCount }} шт</p>
-				</div>
-				<hr>
-				<div class="column">
-					<p class="item">Время {{ time }}</p>
-				</div>
-				<hr>
-				<div class="column">
-					<p class="item">Длина {{ lenght }} км</p>
-				</div>
-				<hr>
-				<div class="column-end">
-                    <button onclick="removeRoute(this)">
-						<p class="item">Удалить</p>
-					</button>
-					<button onclick="showRoute(this)">
-						<p class="item">Построить</p>
-					</button>
-				</div>
-			</div>
-		</div>
+        
+        {% for route in user_routes %}
+        {% if route.user.id == user.id %}
+            <div class="route" id="route" data-id="{{ route.id }}" data-points-location="{{ route.places }}">
+                <hr>
+                <div class="row">
+                    <div class="column">
+                        <p class="item" id="dateRouteData">{{ route.getdatetime}}</p>
+                    </div>
+                    <hr>
+                    <div class="column">
+                        <p class="item" id="pointsCountData">Кол-во точек: {{ route.countPoints }} шт</p>
+                    </div>
+                    <hr>
+                    <div class="column">
+                        <p class="item" id="routeTimeData">{{ route.time }}</p>
+                    </div>
+                    <hr>
+                    <div class="column">
+                        <p class="item" id="routeLenghtData">{{ route.distance }}</p>
+                    </div>
+                    <hr>
+                    <div class="column-end">
+                        <button onclick="removeRoute(this)">
+                            <p class="item">Удалить</p>
+                        </button>
+                        <button onclick="showRoute(this)">
+                            <p class="item">Построить</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        
+        {% endif %}
+        {% endfor %}
 	</div>
 
     <div class="navigator-menu">
@@ -97,9 +141,10 @@
             <div class="menu-block">
 
                 <select class="time-limit" name="time-limit" id="timeLimit">
+                    <option selected value="9999">Лимит по времени: авто</option>
                     <option value="10">Лимит по времени: 10мин</option>
                     <option value="20">Лимит по времени: 20мин</option>
-                    <option selected value="30">Лимит по времени: 30мин</option>
+                    <option value="30">Лимит по времени: 30мин</option>
                     <option value="40">Лимит по времени: 40мин</option>
                     <option value="50">Лимит по времени: 50мин</option>
                     <option value="60">Лимит по времени: 1ч</option>

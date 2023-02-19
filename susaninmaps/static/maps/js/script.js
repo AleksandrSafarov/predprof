@@ -39,20 +39,29 @@ function saveRoute() {
 
     const date = new Date();
     const dateFormat = `${date.toLocaleString()}`.slice(0, -3);
+    var id = imap.saveRoute();
 
-    addRouteInTable(dateFormat, imap.currentRout.pointsCount,
-        imap.currentRout.timeLenght, imap.currentRout.length, imap.currentRout.get());
-
-    imap.saveRoute();
+    addRouteInTable(dateFormat, imap.currentRout.getPointsCount(),
+        imap.currentRout.timeLenght, imap.currentRout.length, imap.currentRout, id);
 }
 
 // Удаление маршрута.
-function removeRoute(element) {
-    element.closest('#route').remove();
+function removeRoute(element, fromHistory=false) {
+    parent = element.closest('#route');
+    
+    var path = 'remove/';
+    if (fromHistory) { path = 'removeFromHistory/'; }
+
+    postData(path, {
+        'id': parent.dataset.id,
+        state: 'inactive'
+    });
+
+    parent.remove();
 }
 
 // Занесение маршрута в таблицу(до обновления страницы).
-function addRouteInTable(date, count, time, length, pointsLocation) {
+function addRouteInTable(date, count, time, length, pointsLocation, id) {
     const placeHolder = document.querySelector('#table');
     const template = document.querySelector('#routeTemplate');
 
@@ -63,10 +72,11 @@ function addRouteInTable(date, count, time, length, pointsLocation) {
     const routeLenght = template.content.querySelector('#routeLenghtData');
 
     routeDiv.dataset.pointsLocation = JSON.stringify(pointsLocation);
+    routeDiv.dataset.pointsLocation = id;
     dateRoute.textContent = `${date}`;
     pointsCount.textContent = `Кол-во точек: ${count} шт`;
     routeTime.textContent = `${time}`;
-    routeLenght.textContent = `${length} км`;
+    routeLenght.textContent = `${length}`;
 
     const route = template.content.cloneNode(true);
     placeHolder.appendChild(route);
@@ -74,9 +84,14 @@ function addRouteInTable(date, count, time, length, pointsLocation) {
 
 // Отрисовка маршруты из таблицы.
 function showRoute(element) {
-    var pointsLocation = JSON.parse(element.closest('#route').dataset.pointsLocation);
+    var currentRout = JSON.parse(element.closest('#route').dataset.pointsLocation);
+    console.log(currentRout)
 
-    imap.currentRout.routeList = [pointsLocation];
+    imap.currentRout.indexCurrentRoute = currentRout.indexCurrentRoute;
+    imap.currentRout.routeList = currentRout.routeList;
+    imap.currentRout.length = currentRout.length;
+    imap.currentRout.timeLenght = currentRout.timeLenght;
+
     imap.displayRoute();
     MapTableSwitch();
 }
@@ -132,10 +147,15 @@ function MapTableSwitch() {
 }
 
 function redirectCheck() {
-    var data = localStorage.getItem('route');
-    if (data !== null) {
-        imap.currentRout.routeList = [JSON.parse(data)];
-        imap.displayRoute();
+    var currentRout = JSON.parse(localStorage.getItem('route'));
+    if (currentRout !== null) {
         localStorage.removeItem('route');
+
+        imap.currentRout.indexCurrentRoute = currentRout.indexCurrentRoute;
+        imap.currentRout.routeList = currentRout.routeList;
+        imap.currentRout.length = currentRout.length;
+        imap.currentRout.timeLenght = currentRout.timeLenght;
+
+        imap.displayRoute();
     }
 }
