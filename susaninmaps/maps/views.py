@@ -40,7 +40,6 @@ def save(request):
     userInfo = json.loads(request.body.decode('utf-8'))["userInfo"].replace(' ', '')
     selectedUser = User.objects.filter(username=userInfo)[0]
     Route.objects.create(user = selectedUser, places=route, distance=length, time=timeLength, countPoints=pointsCount)
-    print(route)
 
     return HttpResponse(request)
 
@@ -55,12 +54,9 @@ def saveToHistory(request):
     timeLength = json.loads(route)["timeLenght"]
     pointsCount = json.loads(request.body.decode('utf-8'))["pointsCount"]
     userInfo = json.loads(request.body.decode('utf-8'))["userInfo"].replace(' ', '')
-    selectedUser = User.objects.filter(username=userInfo)[0]
-    print(route)
-
-    HistoryRoute.objects.create(user = selectedUser, places=route, distance=length, time=timeLength, countPoints=pointsCount)
-
-    print(timeLength)
+    if len(User.objects.filter(username=userInfo)) != 0:
+        selectedUser = User.objects.filter(username=userInfo)[0]
+        HistoryRoute.objects.create(user = selectedUser, places=route, distance=length, time=timeLength, countPoints=pointsCount)
     return HttpResponse(request)
 
 def removeFromHistory(request):
@@ -213,9 +209,7 @@ def route(request):
                 points[i] = coordinates[y]
 
     ti = int(ti['time'])
-    for i in s:
-        print(len(s[i]), i)
-    a = o_gr(s, ti, "55.826249, 37.637578", points=points)
+    a = o_gr(s, ti, "55.828598, 37.633872", points=points)
     if request.method == "GET":
         return JsonResponse(a)
     if request.method == "POST":
