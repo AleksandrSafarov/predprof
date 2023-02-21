@@ -9,7 +9,13 @@
 ```
 git clone github.com/AleksandrSafarov/predprof
 ```
-- Установите виртуальное окружение
+- Установите виртуальное окружение в папке проекта
 ```
 python -m venv venv
 ```
+- Зайдите в виртуальное окружение
+
+  - Windows
+  ```venv/Scripts/activate```
+  - Linux/Mac
+  ```source venv/bin/activate```
