@@ -16,6 +16,14 @@ python -m venv venv
 - Зайдите в виртуальное окружение
 
   - Windows
-  ```venv/Scripts/activate```
+  ```venv\Scripts\activate```
   - Linux/Mac
   ```source venv/bin/activate```
+- Установите внешние зависимости
+```
+pip install -r requirements.txt
+```
+- Запустите сервер
+```
+python susaninmaps/manage.py runserver
+```
