@@ -9,3 +9,7 @@
 ```
 git clone github.com/AleksandrSafarov/predprof
 ```
+- Установите виртуальное окружение
+```
+python -m venv venv
+```
