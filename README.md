@@ -5,7 +5,7 @@
 Минковский Артур Фёдорович</p>
 
 ### Запуск web-приложения
--Загрузите проект
+- Загрузите проект
 ```
 git clone github.com/AleksandrSafarov/predprof
 ```
