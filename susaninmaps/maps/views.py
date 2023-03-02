@@ -17,10 +17,6 @@ from .forms import *
 class Index(TemplateView):
     form_class = IndexForm
     template_name = 'maps/index.html'
-    success_url = reverse_lazy('index')
-
-    def get_queryset(self):
-        return Route.objects.all()
 
     def get_context_data(self, **kwargs):
         self.extra_context = {

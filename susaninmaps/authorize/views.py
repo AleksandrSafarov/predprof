@@ -1,7 +1,7 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls.base import reverse_lazy
 from django.views.generic import *
 
@@ -9,28 +9,19 @@ from .forms import *
 
 from maps.models import HistoryRoute
 
-def personalArea(request):
-    return render(request, 'user/personalArea.html')
 
-class PersonalArea(TemplateView):
+class PersonalArea(LoginRequiredMixin, TemplateView):
     template_name = 'user/personalArea.html'
-    success_url = reverse_lazy('personalArea')
-
-    def get_queryset(self):
-        return HistoryRoute.objects.all()
+    login_url = reverse_lazy('login')
 
     def get_context_data(self, **kwargs):
         self.extra_context = {
             'history_routes': HistoryRoute.objects.all()
         }
         return super().get_context_data(**kwargs)
-        
+    
     def get_success_url(self):
         return reverse_lazy('index')
-
-def logout_user(request):
-    logout(request)
-    return redirect('login')
 
 class SignUp(CreateView):
     form_class = SignUpForm
@@ -65,7 +56,6 @@ class Login(LoginView):
 class ChangeUserData(LoginRequiredMixin, UpdateView):
     form_class = ChangeUserDataForm
     template_name = 'user/form.html'
-
     success_url = reverse_lazy('index')
     login_url = reverse_lazy('login')
 
@@ -92,3 +82,7 @@ class ChangePass(LoginRequiredMixin, PasswordChangeView):
 
     def form_valid(self, form):
         return super().form_valid(form)
+    
+def logout_user(request):
+    logout(request)
+    return redirect('login')
