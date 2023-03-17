@@ -202,11 +202,13 @@ class IMap {
         var path = 'save/';
         if (toHistory) { path = 'saveToHistory/'; }
 
+        var userInfo =  document.getElementById("userInfo").innerText
+        
         return postData(path, {
             "route": JSON.stringify(this.currentRout),
             "date": dateFormat,
             "pointsCount": this.currentRout.getPointsCount(),
-            "userInfo": document.getElementById("userInfo").innerText,
+            "userInfo": userInfo,
             state: 'inactive'
         });
     }
